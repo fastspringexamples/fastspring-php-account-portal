@@ -1,0 +1,32 @@
+getAccounts:
+    path: /getAccounts
+    controller: App\Controller\MainController::getAccounts
+
+subscriptions:
+    path: /subscriptions
+    controller: App\Controller\MainController::updateSubscription
+
+getSubscriptions:
+    path: /getCustomerSubscriptions
+    controller: App\Controller\MainController::getCustomerSubscriptions
+
+login:
+    path:         /login.html
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: login.html
+    methods: GET
+
+accounts:
+    path:         /accounts.html
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: accounts.html
+    methods: GET
+
+subscriptionsTemplate:
+    path:         /account/{accountId}/subscriptions
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: subscriptions.html
+    methods: GET

@@ -1,0 +1,126 @@
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        </head>
+
+    <body>
+        <div class="container-color d-flex w-100 h-100 mx-auto flex-column">
+            <main role="main" class="container">
+                <div id="loading-spinner" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div id="subs-group">
+                    <!-- Subscriptions to be programatically added here -->
+                </div>
+            </main>
+          
+        </div>
+        
+        <div class='subscription-container'>
+            <p> ${subscription.id} </p>
+            <p> ${subscription.display} </p>
+            <p> ${subscription.price} </p>
+            <p> ${subscription.nextChargeDate} </p>
+            <input id="baseInput-${subscription.id}" type="text"> <button onclick="changeBaseProduct(${subscription.id})"> Change base product </button>
+            <input id="baseInput-${subscription.id}" type="text"> <button onclick="changeBaseProduct(${subscription.id})"> Change base product </button>
+        </div>
+
+        <script type="text/javascript">
+
+            function changeBaseProduct(subscriptionId) {
+                const newBase = $(`#baseInput-${subscriptionId}`).val();
+                // Query API
+                const payload = {
+                    subscriptions: [{
+                        subscription: subscriptionId,
+                        product: newBase,
+                        quantity: 1
+                    }]
+                };
+                $.post(`${window.location.origin}/subscriptions`, payload)
+                    .done((data) => {
+                        $.post(`${window.location.origin}/getCustomerSubscriptions`, { subscriptionIds: [ subscriptionId ] })
+                            .done((resNewSub) => {
+                                const newSubs = JSON.parse(resNewSub).subscriptions[0];
+                                const button = newSubs[0].state === active ? ' ' : 
+                                
+
+                                $(`#subs-${subscriptionId} .subs-second-container`).html(`
+                                    <p> ${newSubs.display} </p>
+                                    <p> ${newSubs.price} </p>
+                                    <p> ${newSubs.nextChargeDate} </p>
+                                    <input id="baseInput-${newSubs.id}" type="text">
+                                    <button onclick="changeBaseProduct('${newSubs.id}')"> Change base product </button>
+                                    
+                                    <button >
+                                        Cancel subscription
+                                    </button>
+                                `);
+                                console.log('DONE', $(`#subs-${subscriptionId} .subs-second-container`).html());
+                            });
+                    })
+                    .fail(() => {
+                        alert('Errr');
+                    });
+            }
+
+            function renderSubscription(subscription) {
+                return $(`
+                    <div id='subs-${subscription.id}' class='subs-main-container'>
+                        <p> ${subscription.id} </p>
+                        <div class='subs-second-container'> 
+                            <p> ${subscription.display} </p>
+                            <p> ${subscription.price} </p>
+                            <p> ${subscription.nextChargeDate} </p>
+                            <input id="baseInput-${subscription.id}" type="text">
+                            <button onclick="changeBaseProduct('${subscription.id}')"> Change base product </button>
+                        </div>
+                    </div>
+                `);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Show accounts data from localstorage
+                const accounts = JSON.parse(localStorage.getItem('accounts'));
+                const url = new URL (window.location.href); 
+                const accountId = url.pathname.split("/")[2];
+                console.log(accounts, accountId);
+                if (accounts && accounts.length > 0) {
+                    const account = accounts.find(account => account.id === accountId);
+                    if (account) {
+                        if (account.subscriptions.length > 0) {
+                            $.post(`${window.location.origin}/getCustomerSubscriptions`, { subscriptionIds: account.subscriptions })
+                                .done((data) => {   
+                                    const jsonData = JSON.parse(data);
+                                    const subsElement = jsonData.subscriptions.map(renderSubscription);
+                                    $('#subs-group').append(subsElement);
+                                })
+                                .fail(() => {
+                                    alert('Errr');
+                                });
+                        } else {
+                            alert('No subscriptions in this account');
+                        }
+                    }
+                } else {
+                    alert('No account found');
+                }
+               $('#loading-spinner').hide(); 
+            });
+        </script>
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+
