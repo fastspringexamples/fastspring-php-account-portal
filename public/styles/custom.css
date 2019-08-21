@@ -1,0 +1,42 @@
+
+.order-main-container {
+    background-color: #e9ecef26;
+}
+
+.textCentered {
+    text-align: right;
+}
+
+.order-main-container {
+    margin: 50px 0px;
+}
+
+.table.no-header th {
+    border-top: 0;
+}
+
+/* Loader styles */
+
+.pageLoader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 3rem;
+    height: 3rem;
+}
+
+.fs-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.loading {
+    opacity: 0.3;
+}
+
+.hide {
+    display: none;
+}
+
+

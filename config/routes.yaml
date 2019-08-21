@@ -1,16 +1,31 @@
+login:
+    path: /login
+    controller: App\Controller\MainController::login
+    methods: POST
+
 getAccounts:
     path: /getAccounts
     controller: App\Controller\MainController::getAccounts
 
 subscriptions:
     path: /subscriptions
-    controller: App\Controller\MainController::updateSubscription
+    controller: App\Controller\MainController::updateSubscriptions
+    methods: POST
+
+deleteSubscriptions:
+    path: /subscriptions/{subscriptionId}
+    controller: App\Controller\MainController::deleteSubscription
+    methods: DELETE
 
 getSubscriptions:
     path: /getCustomerSubscriptions
     controller: App\Controller\MainController::getCustomerSubscriptions
 
-login:
+getOrders:
+    path: /getCustomerOrders
+    controller: App\Controller\MainController::getCustomerOrders
+
+loginPage:
     path:         /login.html
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
@@ -29,4 +44,11 @@ subscriptionsTemplate:
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
         template: subscriptions.html
+    methods: GET
+
+ordersTemplate:
+    path:         /account/{accountId}/orders
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: orders.html
     methods: GET

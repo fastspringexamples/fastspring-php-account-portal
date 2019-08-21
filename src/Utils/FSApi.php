@@ -15,15 +15,16 @@ class FSApi
      * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api#FastSpringAPI-accessing
     */
     //const USERNAME = "NHOLARM9RPSQFRANIDPLZG";
-    //const PASSWORD ="gJ16aUlHSgqAo4BPuKHS6g";
+    const URL = "https://api.fastspring.com/";
+
 
     function __construct($username, $password ) {
 		$this->username = $username;
-		$this->password = $password;
+        $this->password = $password;
     }
 
     public function get($params){
-        $url = "https://api.fastspring.com/";
+        $url = self::URL;
         if ($params) {
             $url .= $params;
         }
@@ -42,7 +43,7 @@ class FSApi
     }
 
     public function post($params, $body){
-        $url = "https://api.fastspring.com/";
+        $url = self::URL;
         if ($params) {
             $url .= $params;
         }
@@ -62,6 +63,25 @@ class FSApi
         return json_decode($response, true);
     }
 
+    public function delete($params){
+        $url = self::URL;
+        if ($params) {
+            $url .= $params;
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $err = curl_error($ch);
+            throw new Exception($err);
+        }
+        curl_close($ch);
+        return json_decode($response, true);
+    }
 }
 ?>
 

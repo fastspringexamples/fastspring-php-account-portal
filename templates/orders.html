@@ -13,46 +13,61 @@
     <body>
         <div class="container-color d-flex w-100 h-100 mx-auto flex-column">
             <main role="main" class="container">
-                <div id="loading-spinner" class="spinner-border pageLoader" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div id="loading-spinner" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
-                <div id="subs-group">
+                <div id="orders-group">
                     <!-- Subscriptions to be programatically added here -->
                 </div>
             </main>
         </div>
-        
+
         <script type="text/javascript">
 
-            
-            function renderSubscription(subscription) {
-                const cancelButton = subscription.state === 'active' ? `
-                    <button class="btn btn-secondary" onclick="cancelSubscription('${subscription.id}')">
-                        Cancel
-                    </button>
-                `
-                :
-                `   <button class="btn btn-primary" onclick="uncancelSubscription('${subscription.id}')">
-                        Uncancel
-                    </button>
-                            `;
+            function renderOrderItems(item) {
                 return (`
-                        <div class='container' style="padding-bottom: 10px; position: relative">
-                            <div class="spinner-border fs-spinner hide" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
+                    <tr>
+                        <td> ${item.product} </td>
+                        <td> ${item.display} </td>
+                        <td> ${item.quantity} </td>
+                        <td> ${item.subtotalDisplay} </td>
+                    </tr>
+                `);
+            }
 
+            function renderOrder(order) {
+                const orderItems = order.items.map(renderOrderItems);
+                return (`
+                        <div class='container'>
                             <div class='row' style="border-bottom: 1px solid; text-align: center; padding: 5px; background-color: #17a2b8!important; font-weight: bold;">
-                                 <span> Subscription Id: ${subscription.id} <span>
+                                <div class='col-4'>
+                                     <span> Order Id: ${order.id} <span>
+                                </div>
+                                <div class='col-4'>
+                                     <span> Reference Id: ${order.reference} <span>
+                                </div>
+                                <div class='col-4'>
+                                     <span> Order Completed: ${order.completed} <span>
+                                </div>
                             </div>
                             <div class='row' style="padding-top: 20px;">
-                                <div class='col-4'>
+                                <div class='col-6'>
                                     <div class='row'>
                                         <div class='col-6 textCentered'>
                                             Price
                                         </div>
                                         <div class='col-6'>
-                                            ${subscription.priceDisplay}
+                                            ${order.totalDisplay}
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-6 textCentered'>
+                                            Tax
+                                        </div>
+                                        <div class='col-6'>
+                                            ${order.taxDisplay}
                                         </div>
                                     </div>
                                     <div class='row'>
@@ -60,7 +75,7 @@
                                             Discount
                                         </div>
                                         <div class='col-6'>
-                                            ${subscription.discountDisplay}
+                                            ${order.discountDisplay}
                                         </div>
                                     </div>
                                     <div class='row'>
@@ -68,37 +83,39 @@
                                             <span style="border-top: 1px solid blue; padding: 1px 15px;"> Subtotal </span>
                                         </div>
                                         <div class='col-6'  style="padding-left: 0">
-                                            <span style="border-top: 1px solid blue; padding: 1px 15px;"> ${subscription.subtotalDisplay} </span>
+                                            <span style="border-top: 1px solid blue; padding: 1px 15px;"> ${order.subtotalDisplay} </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-4'>
+                                <div class='col-3'>
                                     <div class='row'>
-                                        Start date: ${subscription.beginDisplay}
+                                        Payment type: ${order.payment.type}
                                     </div>
                                     <div class='row'>
-                                        Current Period: ${subscription.sequence}
-                                    </div>
-                                    <div class='row'>
-                                        Next charge on ${subscription.nextChargeDateDisplay} for ${subscription.nextChargeTotalInPayoutCurrencyDisplay}
-                                    </div> 
-                                </div>
-                                <div class='col-4'>
-                                    <div>
-                                        State: ${subscription.state}
-                                    </div>
-                                    <div>
-                                        ${cancelButton}
+                                        Card Ending: ${order.payment.cardEnding}
                                     </div>
                                 </div>
+                                <div class='col-3'>
+                                    <a href="${order.invoiceUrl}" target="_blank"> Invoice </a>
+                                </div>
                             </div>
+                            <div>
                             <br>
                             <br>
-                            <div class='row' style="padding-left: 15px;">
-                                Base Product: &nbsp; <b> ${subscription.product} </b>
+                                <table class="table no-header">
+                                    <thead>
+                                        <tr>
+                                            <th> Item Id </th>
+                                            <th> Item Display </th>
+                                            <th> Item Quantity </th>
+                                            <th> Item Total </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${orderItems.join('')}
+                                    </tbody>
+                                </table>
                             </div>
-                            <input id="baseInput-${subscription.id}" type="text">
-                                <button class="btn btn-outline-info btn-sm" style="margin-bottom: 3px;" onclick="changeBaseProduct('${subscription.id}')"> Change </button>
                         </div>
                 `);
             }
@@ -111,34 +128,31 @@
                 if (accounts && accounts.length > 0) {
                     const account = accounts.find(account => account.id === accountId);
                     if (account) {
-                        if (account.subscriptions.length > 0) {
-                            $.post(`${window.location.origin}/getCustomerSubscriptions`, { subscriptionIds: account.subscriptions })
+                        if (account.orders.length > 0) {
+                            $.post(`${window.location.origin}/getCustomerOrders`, { orderIds: account.orders })
                                 .done((data) => {   
                                     const jsonData = JSON.parse(data);
-                                    const subsElement = jsonData.subscriptions.map((subscription) => {
-                                        const subsDetails = renderSubscription(subscription);
+                                    const orderElement = jsonData.orders.map((order) => {
+                                        const orderDetails = renderOrder(order);
                                         return (`
-                                            <div id='subs-${subscription.id}' class='card row order-main-container'>
-                                                ${subsDetails}
+                                            <div id='order-${order.id}' class='card row order-main-container'>
+                                                ${orderDetails}
                                             </div>
                                         `);
                                     });
-                                    $('#loading-spinner').hide();
-                                    $('#subs-group').append(subsElement);
+                                    $('#orders-group').append(orderElement);
                                 })
-                                .fail((err) => {
-                                    alert('Error getting subscriptions: ', err.message);
-                                    $('#loading-spinner').hide();
+                                .fail(() => {
+                                    alert('Errr');
                                 });
                         } else {
                             alert('No subscriptions in this account');
-                            $('#loading-spinner').hide();
                         }
                     }
                 } else {
                     alert('No account found');
-                    $('#loading-spinner').hide();
                 }
+               $('#loading-spinner').hide(); 
             });
         </script>
         <script
@@ -148,5 +162,6 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>
+
 
 
