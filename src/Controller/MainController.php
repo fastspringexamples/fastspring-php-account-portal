@@ -16,8 +16,9 @@ use App\Utils\Cryptor;
 class MainController extends AbstractController
 {
 
+    /* TODO using temporarily this endpoint to check crypto functionality */
     public function login(Request $request) {
-        $postData = json_decode($request->getContent(),true);
+        /*$postData = json_decode($request->getContent(),true);
         $token = $postData['token'];
         $cryptor = new Cryptor();
         $credentials = $cryptor->decrypt($token);
@@ -25,7 +26,8 @@ class MainController extends AbstractController
         
         return new JsonResponse(['success' => true, 'username' => $credentialsArr[0], 'password' => $credentialsArr[1]]);
 
-        /*
+         */
+        $postData = json_decode($request->getContent(),true);
         $username = $postData['username'];
         $password = $postData['password'];
         if(!(isset($username) && isset($password))){
@@ -44,7 +46,7 @@ class MainController extends AbstractController
         $token = $cryptor->encrypt($username.":".$password);
         // Return credentials in encrypted token
         return new JsonResponse(['success' => true, 'token' => $token]);
-         */
+         
     }
 
 

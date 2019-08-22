@@ -13,13 +13,11 @@ namespace App\Utils;
 class Cryptor
 {
 
-    const METHOD = 'aes-128-ctr'; // default cipher method if none supplied
-    const KEY = "96bc-Zf%y9;CDeQn";
-
     public function __construct()
     {
-        $this->key = self::KEY;
-        $this->method = self::METHOD;
+        // For now let's use constants by default
+        $this->key = json_decode(file_get_contents(__DIR__.'/../../config/private_keys.json'), true)['secret'];
+        $this->method = 'aes-128-ctr';
     }
 
     protected function iv_bytes()
@@ -45,7 +43,6 @@ class Cryptor
         }
         return FALSE; // failed to decrypt
     }
-
 }
 ?>
 
