@@ -16,44 +16,80 @@ use App\Utils\Cryptor;
 class MainController extends AbstractController
 {
 
-    /* TODO using temporarily this endpoint to check crypto functionality */
     public function login(Request $request) {
-        /*$postData = json_decode($request->getContent(),true);
-        $token = $postData['token'];
-        $cryptor = new Cryptor();
-        $credentials = $cryptor->decrypt($token);
-        $credentialsArr = explode(":", $credentials);
-        
-        return new JsonResponse(['success' => true, 'username' => $credentialsArr[0], 'password' => $credentialsArr[1]]);
-
-         */
-        $postData = json_decode($request->getContent(),true);
-        $username = $postData['username'];
-        $password = $postData['password'];
-        if(!(isset($username) && isset($password))){
+        $username = $request->request->get('username');
+        $password = $request->request->get('password');
+        $email = $request->request->get('email');
+        if(!(isset($username) && isset($password) && isset($email))){
             return new Response('', 400);
         }
         // Try to retrieve data from API
         // This way we confirm that the credentials are correct
         $fsApi = new FSApi($username, $password);
-        $accounts = $fsApi->get('accounts');
+        $accounts = $fsApi->get('accounts?email='.$email);
+        // TODO handle proper error (is it credentials or email)?
         if (isset($accounts['error'])) {
             // Credentials invalid, notify user
             return new Response('Problem retrieving accounts, please check credentials', 400);
         }
-        
+        // Get accountId
+        $accountId = $accounts['accounts'][0]['id'];
+        // Create token
         $cryptor = new Cryptor();
         $token = $cryptor->encrypt($username.":".$password);
         // Return credentials in encrypted token
-        return new JsonResponse(['success' => true, 'token' => $token]);
-         
+        return new JsonResponse(['success' => true, 'token' => $token, 'accountId' => $accountId]);
     }
 
+    public function getAccountDetails(Request $request) {
+        $username = "NHOLARM9RPSQFRANIDPLZG";// $request->request->get('username');
+        $password = "gJ16aUlHSgqAo4BPuKHS6g";// $request->request->get('password');
+        $accountId = "-U7g6WVOR3yRVvqjjKCryQ";
+        
+        if(!(isset($username) && isset($password) && isset($accountId))){
+            return new Response('', 400);
+        }
+        $fsApi = new FSApi($username, $password);
+        $account = $fsApi->get('accounts/'.$accountId);
+        
+        // Get all the orders for this account
+        $orderIds = join(',', $account['orders']);
+        $orders = $fsApi->get('orders/'.$orderIds);
+        // TODO check orders are ok
+
+        return new JsonResponse([
+            'success' => true,
+            'account' => $account,
+            'orders' => $orders['orders']
+        ]);
+    }
+
+    public function getAuthenticatedURL(Request $request) {
+        $username = "NHOLARM9RPSQFRANIDPLZG";//$request->request->get('username');
+        $password = "gJ16aUlHSgqAo4BPuKHS6g";//$request->request->get('password');
+        $accountId = "-U7g6WVOR3yRVvqjjKCryQ";
+        
+        if(!(isset($username) && isset($password) && isset($accountId))){
+            return new Response('', 400);
+        }
+        $fsApi = new FSApi($username, $password);
+        $response = $fsApi->get('accounts/'.$accountId.'/authenticate');
+        $account = $response['accounts'][0];
+        if (isset($account['error'])) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $account['error']
+            ]);
+        }
+        return new JsonResponse([
+            'success' => true,
+            'url' => $account['url']
+        ]);
+    }
 
 
     public function getAccounts(Request $request)
     {
-
         $postData = json_decode($request->getContent(),true);
         $username = $postData['username'];
         $password = $postData['password'];
@@ -78,19 +114,6 @@ class MainController extends AbstractController
         }
         // Return credentials in encrypted token
         return new JsonResponse(['success' => true, 'accounts' => $accountsInfo]);
-    }
-
-    public function getAccountDetails(Request $request) {
-        $username = "NHOLARM9RPSQFRANIDPLZG";//$request->request->get('username');
-        $password = "gJ16aUlHSgqAo4BPuKHS6g";//$request->request->get('password');
-        $accountId = "-U7g6WVOR3yRVvqjjKCryQ";
-        
-        if(!(isset($username) && isset($password) && isset($accountId))){
-            return new Response('', 400);
-        }
-        $fsApi = new FSApi($username, $password);
-        $account = $fsApi->get('accounts/'.$accountId);
-        return $account;
     }
 
     // TODO only allow test ones (live === false)
@@ -118,12 +141,26 @@ class MainController extends AbstractController
         if (!(isset($username) && isset($password) && isset($orderIds))){
             return new Response('', 400);
         }
+        
         $fsApi = new FSApi($username, $password);
         $orders = [];
         foreach($orderIds as $orderId) {
             $orders[] = $fsApi->get('orders/'.$orderId);
         }
         return new JsonResponse(['success' => true, 'orders' => $orders]);
+    }
+
+    public function updateOrders(Request $request) {
+        $username = "NHOLARM9RPSQFRANIDPLZG";
+        $password = "gJ16aUlHSgqAo4BPuKHS6g";
+        $orders = $request->request->all();
+        
+        if (!(isset($username) && isset($password) && isset($orders))){
+            return new Response('', 400);
+        }
+        $fsApi = new FSApi($username, $password);
+        $response = $fsApi->post('orders', $orders);
+        return new JsonResponse(['success' => true, 'response' => $response]);
     }
 
     // Post the content from frontend
@@ -153,6 +190,11 @@ class MainController extends AbstractController
         $fsApi = new FSApi($username, $password);
         $response = $fsApi->delete('subscriptions/'.$subscriptionId);
         return new JsonResponse(['success' => true, 'response' => $response ]);
+    }
+
+    // TODO remove
+    public function DRM(Request $request) {
+        return new Response('Hey yo', 200);
     }
 }
 

@@ -1,0 +1,170 @@
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href='/styles/custom.css'>
+        <script type="text/javascript" src="/js/FSApi.js"> </script>
+        </head>
+
+    <body>
+        <div class="container-color d-flex w-100 h-100 mx-auto flex-column">
+            <main role="main" class="container">
+                <div id="loading-spinner" class="spinner-border pageLoader" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div id="subs-group">
+                    <!-- Subscriptions to be programatically added here -->
+                </div>
+            </main>
+        </div>
+        <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"> </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        We are sorry to hear you are unsatisfied with your current subscription. We would like
+                        to offer you this 20% discount if you stay with us :)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"> No, thanks</button>
+                        <button type="button" class="btn btn-primary" onclick='applySubsDiscount()'> I want the discount!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+            
+            function renderSubscription(subscription) {
+                const cancelButton = subscription.state === 'active' ? `
+                    <button class="btn btn-secondary" data-toggle="modal" data-target="#discountModal">
+                        Cancel
+                    </button>
+                `
+                :
+                `   <button class="btn btn-primary" onclick="uncancelSubscription('${subscription.id}')">
+                        Uncancel
+                    </button>
+                            `;
+                return (`
+                        <div class='container' style="padding-bottom: 10px; position: relative">
+                            <div class="spinner-border fs-spinner hide" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+
+                            <div class='row' style="border-bottom: 1px solid; text-align: center; padding: 5px; background-color: #17a2b8!important; font-weight: bold;">
+                                 <span> Subscription Id: ${subscription.id} <span>
+                            </div>
+                            <div class='row' style="padding-top: 20px;">
+                                <div class='col-4'>
+                                    <div class='row'>
+                                        <div class='col-6 textCentered'>
+                                            Price
+                                        </div>
+                                        <div class='col-6'>
+                                            ${subscription.priceDisplay}
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-6 textCentered'>
+                                            Discount
+                                        </div>
+                                        <div class='col-6'>
+                                            ${subscription.discountDisplay}
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-6 textCentered' style="padding-right: 0">
+                                            <span style="border-top: 1px solid blue; padding: 1px 15px;"> Subtotal </span>
+                                        </div>
+                                        <div class='col-6'  style="padding-left: 0">
+                                            <span style="border-top: 1px solid blue; padding: 1px 15px;"> ${subscription.subtotalDisplay} </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-4'>
+                                    <div class='row'>
+                                        Start date: ${subscription.beginDisplay}
+                                    </div>
+                                    <div class='row'>
+                                        Current Period: ${subscription.sequence}
+                                    </div>
+                                    <div class='row'>
+                                        Next charge on ${subscription.nextChargeDateDisplay} for ${subscription.nextChargeTotalInPayoutCurrencyDisplay}
+                                    </div> 
+                                </div>
+                                <div class='col-4'>
+                                    <div>
+                                        State: ${subscription.state}
+                                    </div>
+                                    <div>
+                                        ${cancelButton}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class='row' style="padding-left: 15px;">
+                                <div class='col-4'>
+                                    <p> Base Product: &nbsp; <b> ${subscription.product} </b> </p>
+                                    <input id="baseInput-${subscription.id}" type="text">
+                                    <button class="btn btn-outline-info btn-sm" style="margin-bottom: 3px;" onclick="changeBaseProduct('${subscription.id}')"> Change </button>
+                                </div>
+                                <div class='col-4'>
+                                    <p> Quantity: &nbsp; ${subscription.quantity} </p>
+                                    <input type="number" min="1" id="quantityInput-${subscription.id}" type="text">
+                                    <button class="btn btn-outline-info btn-sm"  style="margin-bottom: 3px;" onclick="changeSubsQuantity('${subscription.id}')"> Change </button>
+                                </div>
+                            </div>
+                        </div>
+                `);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#loading-spinner').show();
+                const subscriptionId = getSubsId();
+                if (subscriptionId) {
+                    $.post(`${window.location.origin}/getCustomerSubscriptions`, { subscriptionIds: [subscriptionId] })
+                        .done((data) => {   
+                            const jsonData = JSON.parse(data);
+                            const subsElement = jsonData.subscriptions.map((subscription) => {
+                                const subsDetails = renderSubscription(subscription);
+                                return (`
+                                    <div id='subs-${subscription.id}' class='card row order-main-container'>
+                                        ${subsDetails}
+                                    </div>
+                                `);
+                            });
+                            $('#loading-spinner').hide();
+                            $('#subs-group').append(subsElement);
+                        })
+                        .fail((err) => {
+                            alert('Error getting subscriptions: ', err.message);
+                            $('#loading-spinner').hide();
+                        });
+                    } else {
+                        alert('No subscriptions in this account');
+                        $('#loading-spinner').hide();
+                    }
+            });
+        </script>
+
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+

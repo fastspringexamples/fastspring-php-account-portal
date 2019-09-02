@@ -7,6 +7,11 @@ getAccounts:
     path: /getAccounts
     controller: App\Controller\MainController::getAccounts
 
+getAuthenticatedURL:
+    path: /getAuthenticatedURL
+    controller: App\Controller\MainController::getAuthenticatedURL
+    methods: POST
+
 subscriptions:
     path: /subscriptions
     controller: App\Controller\MainController::updateSubscriptions
@@ -21,9 +26,15 @@ getSubscriptions:
     path: /getCustomerSubscriptions
     controller: App\Controller\MainController::getCustomerSubscriptions
 
+updateOrders:
+    path: /orders
+    controller: App\Controller\MainController::updateOrders
+    methods: POST
+
 getOrders:
     path: /getCustomerOrders
     controller: App\Controller\MainController::getCustomerOrders
+    methods: POST
 
 loginPage:
     path:         /login.html
@@ -40,15 +51,36 @@ accounts:
     methods: GET
 
 subscriptionsTemplate:
-    path:         /account/{accountId}/subscriptions
+    path:         /account/{accountId}/subscription/{subscriptionId}/overview.html
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
-        template: subscriptions.html
+        template: new/subscription.html
     methods: GET
 
+
+#New structure
+
+getAccountDetails:
+    path: /getAccountDetails
+    controller: App\Controller\MainController::getAccountDetails
+    methods: POST
+
 ordersTemplate:
-    path:         /account/{accountId}/orders
+    path:         /account/{accountId}/orders.html
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
-        template: orders.html
+        template: new/orders.html
     methods: GET
+
+orderTemplate:
+    path:         /account/{accountId}/order/{orderId}/overview.html
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: new/order.html
+    methods: GET
+
+#TODO
+DRM:
+    path: /DRM
+    controller: App\Controller\MainController::DRM
+    methods: [GET,POST]

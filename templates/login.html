@@ -26,7 +26,7 @@
         <link href="/styles/floating-labels.css" rel="stylesheet">
     </head>
     <body>
-        <form class="form-signin">
+        <form class="form-signin" id="loginForm">
             <div class="text-center mb-4">
                 <img class="mb-4" src="/images/fastspring.png" alt="" width="72" height="72">
                 <h1 class="h3 mb-3 font-weight-normal"> Account Portal </h1>
@@ -42,40 +42,49 @@
                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
                 <label for="inputPassword">Password</label>
             </div>
-
-            <button class="btn btn-lg btn-primary btn-block" onclick="submitPassword()">Sign in</button>
+            <div class="form-label-group">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Buyer's email" required>
+                <label for="inputEmail">Buyer's email</label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             <p class="mt-5 mb-3 text-muted text-center">&copy; FastSpring</p>
         </form>
         <script type="text/javascript">
+
             function submitPassword() {
                 const username = document.getElementById('inputUsername').value;
                 const password = document.getElementById('inputPassword').value;
-                // Create AJAX request to our backend
-                const Http = new XMLHttpRequest();
-                const url= '/getAccounts';
-                Http.open('POST', url, true);
-                Http.setRequestHeader("Content-Type", "application/json");
-                console.log('EEEE');
-                Http.onreadystatechange = function(){
-                    if (this.readyState === 4 && this.status === 200) {
-                        const res = JSON.parse(this.responseText);
-                        if (res && res.success) {
-                            // Save account data in localStorage and redirect
-                            localStorage.setItem('accounts', JSON.stringify(res.accounts));
-                            window.location.href = '/accounts.html';
-                        } else {
-                            alert(`Error setting password: ${res.error}`);
-                        }
-                    }
-                };
-
-                Http.send(JSON.stringify({
-                    username,
-                    password
-                }));
+                const email = document.getElementById('inputEmail').value;
+                const payload = { username, password , email };
+                $.post(`${window.location.origin}/login`, payload)
+                    .done((resLogin) => {
+                        if (resLogin && JSON.parse(resLogin).success) {
+                            const { accountId, token } = JSON.parse(resLogin);
+                            // Store private token in local storage
+                            localStorage.setItem('FS-token', JSON.stringify(token));
+                            // Redirect user to account page
+                            window.location.href = `/account/${accountId}/orders.html`;
+                        } // else TODO
+                    })
+                    .fail(() => {
+                        alert('Errr');
+                    });
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#loginForm').submit(function (e) {
+                    e.preventDefault();
+                    submitPassword();
+                    return false;
+                });
+            });
+            
         </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     </body>
 </html>

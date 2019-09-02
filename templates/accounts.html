@@ -34,7 +34,6 @@
                 // Show accounts data from localstorage
                 const accounts = JSON.parse(localStorage.getItem('accounts'));
                 if (accounts && accounts.length > 0) {
-                    console.log("EEE");
                     accounts.forEach(account => {
                         const accountRow = $(`
                         <tr> 
