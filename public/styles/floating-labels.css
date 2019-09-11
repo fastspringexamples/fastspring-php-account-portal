@@ -100,3 +100,12 @@ body {
     color: #777;
   }
 }
+
+.login-info {
+    position: fixed;
+    top: 20;
+    left: 50;
+    color: #007bff;
+    font-size: 38;
+    cursor: pointer;
+}
