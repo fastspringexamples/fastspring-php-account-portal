@@ -52,38 +52,6 @@ function renderModalTags(order) {
                 </div>
             </div>
     `);
-    
-        /*
-    return (`
-        <div class='row'>
-            <div class="col"> 
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Key</th>
-                      <th scope="col">Val</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                        <td> Tag1 </td>
-                        <td> val1 </td>
-                        
-                    </tr>
-                  </tbody>
-                  </table>
-                    <button
-                class="btn btn-outline-info btn-sm"
-                data-toggle="modal"
-                data-target="#tagsModal"
-            >
-                Update tags
-            </button>
-            </div>
-        </div>
-    `);
-    */
-
 }
 
 function renderCustomTags(order) {
@@ -122,7 +90,6 @@ function renderCustomTags(order) {
 function renderProductFulfillments(item) {
     let fulfillmentsItems = [];
     if (item.fulfillments && Object.keys(item.fulfillments).length > 0) {
-        // TODO fulfillments
         fulfillmentsItems = Object.keys(item.fulfillments).map((key) => {
             const fulfilment = item.fulfillments[key][0];
             return (`
@@ -291,13 +258,10 @@ function renderOrder(order) {
                     <span class="sr-only">Loading...</span>
                 </div>
                 <div class='row' style="border-bottom: 1px solid; text-align: center; padding: 5px; background-color: #17a2b8!important; font-weight: bold;">
-                    <div class='col-4'>
-                         <span> Order Id: ${order.id} <span>
-                    </div>
-                    <div class='col-4'>
+                    <div class='col'>
                          <span> Reference Id: ${order.reference} <span>
                     </div>
-                    <div class='col-4'>
+                    <div class='col align-self-end'>
                          <span> Order Completed: ${order.completed} <span>
                     </div>
                 </div>

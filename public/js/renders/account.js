@@ -29,7 +29,6 @@ function renderOrdersTable(orders) {
     const orderRows = orders.map((order) => `
         <tr class='order-row' onclick="goToOrder('${order.id}');">
             <td> ${order.changedDisplay}</td>
-            <td> ${order.id} </td>
             <td> ${order.reference} </td>
             <td> ${order.subtotalDisplay} </td>
             <td> ${(order.completed ? 'Completed' : 'Canceled')}
@@ -52,7 +51,6 @@ function renderOrdersTable(orders) {
                 <thead>
                     <tr class="bg-info">
                         <th scope="col"> Date </th>
-                        <th scope="col"> Order Id </th>
                         <th scope="col"> Reference </th>
                         <th scope="col"> Subtotal </th>
                         <th scope="col"> Status </th>
