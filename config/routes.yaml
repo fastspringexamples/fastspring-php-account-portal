@@ -1,29 +1,57 @@
+    # Account endpoints
+
 login:
     path: /login
-    controller: App\Controller\MainController::login
+    controller: App\Controller\AccountController::login
     methods: POST
 
-getAccounts:
-    path: /getAccounts
-    controller: App\Controller\MainController::getAccounts
+getAccountDetails:
+    path: /getAccountDetails
+    controller: App\Controller\AccountController::getAccountDetails
+    methods: POST
+
+getAuthenticatedURL:
+    path: /getAuthenticatedURL
+    controller: App\Controller\AccountController::getAuthenticatedURL
+    methods: POST
+
+DRM:
+    path: /DRM
+    controller: App\Controller\AccountController::DRM
+    methods: [POST, GET]
+
+
+    # Order endpoints
+
+updateOrders:
+    path: /orders
+    controller: App\Controller\OrderController::updateOrders
+    methods: POST
+
+getOrders:
+    path: /getCustomerOrders
+    controller: App\Controller\OrderController::getCustomerOrders
+    methods: POST
+
+
+    # Subscription endpoints
 
 subscriptions:
     path: /subscriptions
-    controller: App\Controller\MainController::updateSubscriptions
+    controller: App\Controller\SubscriptionController::updateSubscriptions
     methods: POST
 
 deleteSubscriptions:
     path: /subscriptions/{subscriptionId}
-    controller: App\Controller\MainController::deleteSubscription
+    controller: App\Controller\SubscriptionController::deleteSubscription
     methods: DELETE
 
 getSubscriptions:
     path: /getCustomerSubscriptions
-    controller: App\Controller\MainController::getCustomerSubscriptions
+    controller: App\Controller\SubscriptionController::getCustomerSubscriptions
 
-getOrders:
-    path: /getCustomerOrders
-    controller: App\Controller\MainController::getCustomerOrders
+
+    # Templates
 
 loginPage:
     path:         /login.html
@@ -32,23 +60,24 @@ loginPage:
         template: login.html
     methods: GET
 
-accounts:
-    path:         /accounts.html
+accountTemplate:
+    path:         /account/{accountId}/overview.html
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
-        template: accounts.html
+        template: account.html
+    methods: GET
+
+orderTemplate:
+    path:         /account/{accountId}/order/{orderId}/overview.html
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: order.html
     methods: GET
 
 subscriptionsTemplate:
-    path:         /account/{accountId}/subscriptions
+    path:         /account/{accountId}/order/{orderId}/subscription/{subscriptionId}/overview.html
     controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
-        template: subscriptions.html
+        template: subscription.html
     methods: GET
 
-ordersTemplate:
-    path:         /account/{accountId}/orders
-    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
-    defaults:
-        template: orders.html
-    methods: GET

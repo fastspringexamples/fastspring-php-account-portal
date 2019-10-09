@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             .bd-placeholder-img {
@@ -26,7 +26,15 @@
         <link href="/styles/floating-labels.css" rel="stylesheet">
     </head>
     <body>
-        <form class="form-signin">
+        <span
+            data-toggle="modal"
+            data-target="#infoModal"
+            class="login-info"
+        >
+            <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Page Information" data-original-title="Page Information">
+            </i>
+        </span>
+        <form class="form-signin" id="loginForm">
             <div class="text-center mb-4">
                 <img class="mb-4" src="/images/fastspring.png" alt="" width="72" height="72">
                 <h1 class="h3 mb-3 font-weight-normal"> Account Portal </h1>
@@ -42,40 +50,88 @@
                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
                 <label for="inputPassword">Password</label>
             </div>
-
-            <button class="btn btn-lg btn-primary btn-block" onclick="submitPassword()">Sign in</button>
+            <div class="form-label-group">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Buyer's email" required>
+                <label for="inputEmail">Buyer's email</label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             <p class="mt-5 mb-3 text-muted text-center">&copy; FastSpring</p>
         </form>
+
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"> Welcome to the Custom Management Portal </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                This is an example integration of a custom management portal based on the
+                                <a href="https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts#id-/accounts-GetauthenticatedaccountmanagementURL" target="_blank">FastSpring API</a>.
+                            </p>
+                            <p>
+                                To access the portal you need to input your store's API credentials and a buyer's email. These credentials will be used along the application to
+                                interact with the API on your behalf and retrieve and update buyer's account data such as orders and subscriptions.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"> Got it! </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
         <script type="text/javascript">
+
+            /*
+                Grab the form value and send it to the backend. If the request is succesfull a tokenized version of the
+                API credentials is stored in the sessionStorage and the user is sent to buyer's account page.
+            */
             function submitPassword() {
                 const username = document.getElementById('inputUsername').value;
                 const password = document.getElementById('inputPassword').value;
-                // Create AJAX request to our backend
-                const Http = new XMLHttpRequest();
-                const url= '/getAccounts';
-                Http.open('POST', url, true);
-                Http.setRequestHeader("Content-Type", "application/json");
-                console.log('EEEE');
-                Http.onreadystatechange = function(){
-                    if (this.readyState === 4 && this.status === 200) {
-                        const res = JSON.parse(this.responseText);
-                        if (res && res.success) {
-                            // Save account data in localStorage and redirect
-                            localStorage.setItem('accounts', JSON.stringify(res.accounts));
-                            window.location.href = '/accounts.html';
+                const email = document.getElementById('inputEmail').value;
+                const payload = { username, password , email };
+                $.post(`${window.location.origin}/login`, payload)
+                    .done((resLogin) => {
+                        if (resLogin && JSON.parse(resLogin).success) {
+                            const { accountId, token } = JSON.parse(resLogin);
+                            // Store private token in local storage
+                            sessionStorage.setItem('FS-token', JSON.stringify(token));
+                            // Redirect user to account page
+                            window.location.href = `/account/${accountId}/overview.html`;
                         } else {
-                            alert(`Error setting password: ${res.error}`);
+                            alert(JSON.parse(resLogin).error);
                         }
-                    }
-                };
-
-                Http.send(JSON.stringify({
-                    username,
-                    password
-                }));
+                    })
+                    .fail(() => {
+                        alert('There was a problem with your request, please try again');
+                    });
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Prevent default behaviour when submitting password
+                $('#loginForm').submit(function (e) {
+                    e.preventDefault();
+                    submitPassword();
+                    return false;
+                });
+                // Enable data tooltips
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }); 
+            });
+            
         </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     </body>
 </html>

@@ -1,0 +1,149 @@
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href='/styles/custom.css'>
+        <!-- Custom functions -->
+        <script type="text/javascript" src="/js/utils/common.js"> </script>
+        <script type="text/javascript" src="/js/apis/subscription.js"> </script>
+        <script type="text/javascript" src="/js/renders/subscription.js"> </script>
+        </head>
+
+    <body>
+        <nav class="navbar navbar-dark bg-dark">
+            <div>
+                <span
+                     data-toggle="modal"
+                    data-target="#infoModal"
+                    class="info"
+                >
+                    <i class="fa fa-question-circle customBlue">
+                    </i>
+                    Page info
+                </span>
+                <div class='fs-breadcrumb'> 
+                    <span>
+                        <a id='accountLink' href=""> Account </a> /
+                        <a id='orderLink' href=""> Order </a> /
+                        Subscription
+                    </span>
+                </div>
+            </div>
+             <button data-toggle="tooltip" data-placement="bottom" title="Logout" data-original-title="Logout" class="navbar-toggler" type="button" onclick="logout()">
+                <i class="fa fa-sign-out customBlue" style="cursor:pointer">
+                </i>
+            </button>
+        </nav>
+        <div class="container-color d-flex w-100 h-100 mx-auto flex-column">
+            <main role="main" class="container">
+                <div id="loading-spinner" class="spinner-border pageLoader" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div id="subs-group">
+                    <!-- Subscriptions to be programatically added here -->
+                </div>
+            </main>
+        </div>
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"> How does it work? </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p> This page shows information about a particular subscription retrieved through the
+                            <a href="https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions#id-/subscriptions-GetOneorMoreSubscriptionInstances" target="_blank"> /subscriptions </a> endpoint.
+                            </p>
+                            <p>
+                                At the right hand side there is button to cancel/uncancel the subscription.
+                                At the bottom there are two forms to 
+                               <a href="https://docs.fastspring.com/activity-events-orders-and-subscriptions/managing-active-subscriptions/prorating-when-upgrading-or-downgrading-subscription-plans" target="_blank"> upgrade/downgrade </a> 
+                                the subscription by changing the base product and quantity.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"> Got it! </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"> </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        We are sorry to hear you are unsatisfied with your current subscription. We would like
+                        to offer you this 20% discount if you stay with us :)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"> No, thanks</button>
+                        <button type="button" class="btn btn-primary" onclick='applySubsDiscount()'> I want the discount!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Update breadcrumb navigation links
+                const accountId = getAccountId();
+                $('#accountLink').attr("href", `/account/${accountId}/overview.html`);
+                const orderId = getOrderId();
+                $('#orderLink').attr("href", `/account/${accountId}/order/${orderId}/overview.html`);
+                
+                // Get subscription information and render it 
+                $('#loading-spinner').show();
+                const subscriptionId = getSubsId();
+                const token = getToken();
+                $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [subscriptionId] })
+                    .done((resSubscription) => {
+                        if (resSubscription && JSON.parse(resSubscription).success) {
+                            const parsedData = JSON.parse(resSubscription);
+                            const subsElement = parsedData.subscriptions.map((subscription) => {
+                                const subsDetails = renderSubscription(subscription);
+                                return (`
+                                    <div id='subs-${subscription.id}' class='card row order-main-container'>
+                                        ${subsDetails}
+                                    </div>
+                                `);
+                            });
+                            $('#loading-spinner').hide();
+                            $('#subs-group').append(subsElement);
+                        } else if (!(resSubscription && JSON.parse(resSubscription).error)) {
+                            forceLogout('An unexpected server error occurred, please login again.');
+                        } else if (JSON.parse(resSubscription).error === 'API credentials not provided') {
+                            forceLogout('API credentials not provided, please login again');
+                        } else {
+                            alert(JSON.parse(resSubscription).error);
+                            goToAccount();
+                        }
+                    })
+                    .fail((err) => {
+                        forceLogout('An unexpected server error occurred, please login again.');
+                    });
+            });
+        </script>
+
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>

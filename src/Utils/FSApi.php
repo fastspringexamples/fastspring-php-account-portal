@@ -4,7 +4,7 @@ namespace App\Utils;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-/* Custom utility to perform GET request to the FastSpring API
+/* Curl wrapper to interact the FastSpring API
  * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api
  */
 class FSApi
@@ -14,13 +14,12 @@ class FSApi
      * To put to your personal store, you'll need replace with your own credentials
      * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api#FastSpringAPI-accessing
     */
-    //const USERNAME = "NHOLARM9RPSQFRANIDPLZG";
     const URL = "https://api.fastspring.com/";
 
 
-    function __construct($username, $password ) {
-		$this->username = $username;
-        $this->password = $password;
+    function __construct($credentials) {
+		$this->username = $credentials['username'];
+        $this->password = $credentials['password'];
     }
 
     public function get($params){
@@ -34,6 +33,11 @@ class FSApi
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         $response = curl_exec($ch);
+        // Check that request is not unauthorized
+        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) === 401) {
+            throw new Exception('API credentials not valid');
+        }
+        // Check request is valid
         if ($response === false) {
             $err = curl_error($ch);
             throw new Exception($err);
@@ -55,6 +59,11 @@ class FSApi
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         $response = curl_exec($ch);
+        // Check that request is not unauthorized
+        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) === 401) {
+            throw new Exception('API credentials not valid');
+        }
+        // Check request is valid
         if ($response === false) {
             $err = curl_error($ch);
             throw new Exception($err);
@@ -75,6 +84,11 @@ class FSApi
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         $response = curl_exec($ch);
+        // Check that request is not unauthorized
+        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) === 401) {
+            throw new Exception('API credentials not valid');
+        }
+        // Check request is valid
         if ($response === false) {
             $err = curl_error($ch);
             throw new Exception($err);
@@ -84,5 +98,4 @@ class FSApi
     }
 }
 ?>
-
 
