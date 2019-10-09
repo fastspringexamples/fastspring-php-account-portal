@@ -6,7 +6,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 use App\Utils\Cryptor;
 
-/* Helper to check and retrieve encrypted credentials
+/* 
+ * Helper to check and retrieve encrypted credentials
  * from requests.
  */
 

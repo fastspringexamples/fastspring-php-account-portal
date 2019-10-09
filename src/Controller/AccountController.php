@@ -12,8 +12,12 @@ use App\Utils\FSApi;
 use App\Utils\Cryptor;
 use App\Utils\AuthRequest;
 
+/*
+ *  Controller class for the /accounts endpoint
+ */
 class AccountController extends AbstractController
 {
+
 
     public function login(Request $request) {
         try {
@@ -56,6 +60,7 @@ class AccountController extends AbstractController
 
     public function getAccountDetails(Request $request) {
         try {
+            // Check credentials from URL
             $credentials = AuthRequest::getCredentials($request);
             $accountId = $request->request->get('accountId');
             
@@ -65,6 +70,7 @@ class AccountController extends AbstractController
                     'error' => 'Missing params in request'
                 ]);
             }
+            // Get account information from API
             $fsApi = new FSApi($credentials);
             $account = $fsApi->get('accounts/'.$accountId);
             
@@ -117,10 +123,6 @@ class AccountController extends AbstractController
         } catch (Exception $e) {
             return new JsonResponse(['success' => false, 'error' => $e->getMessage()]);
         }
-    }
-
-    public function DRM(Request $request) {
-        return new Response('LICENSE-XYZ');
     }
 }
 

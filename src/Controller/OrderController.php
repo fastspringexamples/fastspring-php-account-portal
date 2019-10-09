@@ -11,6 +11,10 @@ use App\Utils\FSApi;
 use App\Utils\Cryptor;
 use App\Utils\AuthRequest;
 
+/*
+ *  Controller class for the /orders endpoint
+ */
+
 class OrderController extends AbstractController
 {
     public function getCustomerOrders(Request $request) {
@@ -43,6 +47,9 @@ class OrderController extends AbstractController
         return new JsonResponse(['success' => true, 'orders' => $orders]);
     }
 
+    /*
+     *  It forwards the POST data sent by the client to the /orders endpoint, primarily for updating custom order tags
+     */
     public function updateOrders(Request $request) {
         $credentials = AuthRequest::getCredentials($request);
         $orders = $request->request->all();

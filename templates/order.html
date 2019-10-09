@@ -81,8 +81,12 @@
                 // Update breadcrumb navigation links
                 const accountId = getAccountId();
                 $('#accountLink').attr("href", `/account/${accountId}/overview.html`);
+
+                // Get useful variables
                 const orderId = getOrderId();
                 const token = getToken();
+                
+                // Retrieve order information and render it
                 $.post(`${window.location.origin}/getCustomerOrders`, { token, orderIds: [orderId] })
                     .done((resOrders) => {
                         if (resOrders &&  JSON.parse(resOrders).success) {

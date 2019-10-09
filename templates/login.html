@@ -70,12 +70,11 @@
                         <div class="modal-body">
                             <p>
                                 This is an example integration of a custom management portal based on the
-                                <a href="https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts#id-/accounts-GetauthenticatedaccountmanagementURL" target="_blank">FastSpring API
-                            </a>.
+                                <a href="https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts#id-/accounts-GetauthenticatedaccountmanagementURL" target="_blank">FastSpring API</a>.
                             </p>
                             <p>
                                 To access the portal you need to input your store's API credentials and a buyer's email. These credentials will be used along the application to
-                                query the API on your behalf in order to retrieve and update buyer's account data such as orders and subscriptions.
+                                interact with the API on your behalf and retrieve and update buyer's account data such as orders and subscriptions.
                             </p>
                         </div>
                         <div class="modal-footer">
@@ -87,6 +86,10 @@
 
         <script type="text/javascript">
 
+            /*
+                Grab the form value and send it to the backend. If the request is succesfull a tokenized version of the
+                API credentials is stored in the sessionStorage and the user is sent to buyer's account page.
+            */
             function submitPassword() {
                 const username = document.getElementById('inputUsername').value;
                 const password = document.getElementById('inputPassword').value;
@@ -110,11 +113,13 @@
             }
 
             document.addEventListener('DOMContentLoaded', function() {
+                // Prevent default behaviour when submitting password
                 $('#loginForm').submit(function (e) {
                     e.preventDefault();
                     submitPassword();
                     return false;
                 });
+                // Enable data tooltips
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 }); 

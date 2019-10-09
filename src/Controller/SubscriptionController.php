@@ -11,6 +11,10 @@ use App\Utils\FSApi;
 use App\Utils\Cryptor;
 use App\Utils\AuthRequest;
 
+/*
+ *  Controller class for the /subscriptions endpoint
+ */
+
 class SubscriptionController extends AbstractController
 {
     // This has been limited to one subscription only

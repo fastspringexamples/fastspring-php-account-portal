@@ -63,6 +63,12 @@
                             <p> This page shows information about a particular subscription retrieved through the
                             <a href="https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions#id-/subscriptions-GetOneorMoreSubscriptionInstances" target="_blank"> /subscriptions </a> endpoint.
                             </p>
+                            <p>
+                                At the right hand side there is button to cancel/uncancel the subscription.
+                                At the bottom there are two forms to 
+                               <a href="https://docs.fastspring.com/activity-events-orders-and-subscriptions/managing-active-subscriptions/prorating-when-upgrading-or-downgrading-subscription-plans" target="_blank"> upgrade/downgrade </a> 
+                                the subscription by changing the base product and quantity.
+                            </p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal"> Got it! </button>
@@ -100,7 +106,7 @@
                 const orderId = getOrderId();
                 $('#orderLink').attr("href", `/account/${accountId}/order/${orderId}/overview.html`);
                 
-                // Populate content
+                // Get subscription information and render it 
                 $('#loading-spinner').show();
                 const subscriptionId = getSubsId();
                 const token = getToken();
@@ -141,5 +147,3 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>
-
-

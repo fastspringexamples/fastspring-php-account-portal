@@ -4,7 +4,7 @@ namespace App\Utils;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-/* Custom utility to perform GET request to the FastSpring API
+/* Curl wrapper to interact the FastSpring API
  * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api
  */
 class FSApi
@@ -98,5 +98,4 @@ class FSApi
     }
 }
 ?>
-
 

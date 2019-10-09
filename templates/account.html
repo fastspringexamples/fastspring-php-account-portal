@@ -77,7 +77,7 @@
                 // Populate content
                 const url = new URL(window.location.href); 
                 const accountId = url.pathname.split("/")[2];
-                // Get token from local storage
+                // Get account details and render it
                 const token = getToken();
                 $.post(`${window.location.origin}/getAccountDetails`, { token, accountId })
                     .done((resAccount) => {
