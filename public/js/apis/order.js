@@ -11,12 +11,12 @@ function updateOrders(payload) {
     showItemLoader();
     $.post(`${window.location.origin}/orders`, payload)
         .done((resNewOrder) => {
-            if (resNewOrder && JSON.parse(resNewOrder).success) {
+            if (resNewOrder && resNewOrder.success) {
                 // Reload content
                 setTimeout(function() {
                     $.post(`${window.location.origin}/getCustomerOrders`, { token, orderIds: [orderId] })
                         .done((orderData) => {
-                            const newOrder = JSON.parse(orderData).orders[0];
+                            const newOrder = orderData.orders[0];
                             const newOrderElement = renderOrder(newOrder);
                             $(`#order-${orderId}`).html(newOrderElement);
                             hideItemLoader();

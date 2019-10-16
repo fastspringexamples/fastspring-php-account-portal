@@ -112,9 +112,8 @@
                 const token = getToken();
                 $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [subscriptionId] })
                     .done((resSubscription) => {
-                        if (resSubscription && JSON.parse(resSubscription).success) {
-                            const parsedData = JSON.parse(resSubscription);
-                            const subsElement = parsedData.subscriptions.map((subscription) => {
+                        if (resSubscription && resSubscription.success) {
+                            const subsElement = resSubscription.subscriptions.map((subscription) => {
                                 const subsDetails = renderSubscription(subscription);
                                 return (`
                                     <div id='subs-${subscription.id}' class='card row order-main-container'>
@@ -124,12 +123,12 @@
                             });
                             $('#loading-spinner').hide();
                             $('#subs-group').append(subsElement);
-                        } else if (!(resSubscription && JSON.parse(resSubscription).error)) {
+                        } else if (!(resSubscription && resSubscription.error)) {
                             forceLogout('An unexpected server error occurred, please login again.');
-                        } else if (JSON.parse(resSubscription).error === 'API credentials not provided') {
+                        } else if (resSubscription.error === 'API credentials not provided') {
                             forceLogout('API credentials not provided, please login again');
                         } else {
-                            alert(JSON.parse(resSubscription).error);
+                            alert(resSubscription.error);
                             goToAccount();
                         }
                     })

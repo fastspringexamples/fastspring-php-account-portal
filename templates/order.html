@@ -89,9 +89,8 @@
                 // Retrieve order information and render it
                 $.post(`${window.location.origin}/getCustomerOrders`, { token, orderIds: [orderId] })
                     .done((resOrders) => {
-                        if (resOrders &&  JSON.parse(resOrders).success) {
-                            const parsedData = JSON.parse(resOrders);
-                            const orderElement = parsedData.orders.map((order) => {
+                        if (resOrders &&  resOrders.success) {
+                            const orderElement = resOrders.orders.map((order) => {
                                 const orderDetails = renderOrder(order);
                                 return (`
                                     <div id='order-${order.id}' class='card row order-main-container'>
@@ -101,12 +100,12 @@
                             });
                             $('#orders-group').append(orderElement);
                             $('#loading-spinner').hide();
-                        } else if (!(resSubscription && JSON.parse(resSubscription).error)) {
+                        } else if (!(resOrders && resOrders.error)) {
                             forceLogout('An unexpected server error occurred, please login again.');
-                        } else if (JSON.parse(resSubscription).error === 'API credentials not provided') {
+                        } else if (resOrders.error === 'API credentials not provided') {
                             forceLogout('API credentials not provided, please login again');
                         } else {
-                            alert(JSON.parse(resSubscription).error);
+                            alert(resOrders.error);
                             goToAccount();
                         }
                     })

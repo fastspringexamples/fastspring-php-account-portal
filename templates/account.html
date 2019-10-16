@@ -81,18 +81,17 @@
                 const token = getToken();
                 $.post(`${window.location.origin}/getAccountDetails`, { token, accountId })
                     .done((resAccount) => {
-                        if (resAccount && JSON.parse(resAccount).success) {
-                            const parsedData = JSON.parse(resAccount);
-                            const accountElement = renderAccountDetails(parsedData.account);
-                            const ordersElement = parsedData.orders.length > 0 ?
-                                renderOrdersTable(parsedData.orders)
+                        if (resAccount && resAccount.success) {
+                            const accountElement = renderAccountDetails(resAccount.account);
+                            const ordersElement = resAccount.orders.length > 0 ?
+                                renderOrdersTable(resAccount.orders)
                                 :
-                                renderNoOrders(parsedData.orders);
+                                renderNoOrders(resAccount.orders);
                             ;
                             $('#loading-spinner').hide();
                             $('#account-container').append([accountElement, ordersElement]);
                         } else {
-                            forceLogout(JSON.parse(resAccount).error);
+                            forceLogout(resAccount.error);
                         }
                     })
                     .fail(() => {

@@ -125,4 +125,3 @@ class AccountController extends AbstractController
         }
     }
 }
-

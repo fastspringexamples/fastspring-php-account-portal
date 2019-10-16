@@ -9,19 +9,19 @@ function updateSubscription(payload, subscriptionId) {
     payload.token = token;
     $.post(`${window.location.origin}/subscriptions`, payload)
         .done((resNewSub) => {
-            if (resNewSub && JSON.parse(resNewSub).success) {
+            if (resNewSub && resNewSub.success) {
                 // Reload content
                 setTimeout(function() {
                 $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [subscriptionId] })
                     .done((subData) => {
-                        const newSubs = JSON.parse(subData).subscriptions[0];
+                        const newSubs = subData.subscriptions[0];
                         const newSubsElement = renderSubscription(newSubs);
                         $(`#subs-${subscriptionId}`).html(newSubsElement);
                         hideItemLoader();
                     });
                 }, 5000);
             } else {
-                alert('Could not cancel subscription: ', JSON.parse(resNewSub).error);
+                alert('Could not cancel subscription: ', resNewSub.error);
                 hideItemLoader(subscriptionId);
             }
         });
@@ -89,11 +89,11 @@ function cancelSubscription(subscriptionId) {
         url: `${window.location.origin}/subscriptions/${subscriptionId}`,
         type: 'DELETE',
         success: function(resNewSub) {
-            if (resNewSub && JSON.parse(resNewSub).success) {
+            if (resNewSub && resNewSub.success) {
                 setTimeout(function() {
                     $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [ subscriptionId ] })
                         .done((subData) => {
-                            const newSubs = JSON.parse(subData).subscriptions[0];
+                            const newSubs = subData.subscriptions[0];
                             const newSubsElement = renderSubscription(newSubs);
                             $(`#subs-${subscriptionId}`).html(newSubsElement);
                             hideItemLoader();

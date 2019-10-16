@@ -97,14 +97,14 @@
                 const payload = { username, password , email };
                 $.post(`${window.location.origin}/login`, payload)
                     .done((resLogin) => {
-                        if (resLogin && JSON.parse(resLogin).success) {
-                            const { accountId, token } = JSON.parse(resLogin);
+                        if (resLogin && resLogin.success) {
+                            const { accountId, token } = resLogin;
                             // Store private token in local storage
                             sessionStorage.setItem('FS-token', JSON.stringify(token));
                             // Redirect user to account page
                             window.location.href = `/account/${accountId}/overview.html`;
                         } else {
-                            alert(JSON.parse(resLogin).error);
+                            alert(resLogin.error);
                         }
                     })
                     .fail(() => {

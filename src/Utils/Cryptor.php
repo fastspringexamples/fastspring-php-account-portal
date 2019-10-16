@@ -44,8 +44,3 @@ class Cryptor
         return FALSE; // failed to decrypt
     }
 }
-?>
-
-
-
-
