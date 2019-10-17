@@ -1,0 +1,6 @@
+# app.yaml
+runtime: php
+env: flex
+env_variables:
+  APP_ENV: 'prod'
+  DOCUMENT_ROOT: '/app/public'
