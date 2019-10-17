@@ -4,7 +4,7 @@ This is an example implementation of a custom [Account Management Portal](https:
 The backend is powered by the [Symfony](https://symfony.com) PHP framework.
 
 ## Demo
-You can acess the a live demo [here](https://fs-accountportal.appspot.com/login.html).
+You can acess a live demo [here](https://fs-accountportal.appspot.com/login.html).
 
 ## Requirements
 
