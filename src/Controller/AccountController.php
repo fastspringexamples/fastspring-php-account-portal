@@ -80,11 +80,16 @@ class AccountController extends AbstractController
                 $orderIds = join(',', $account['orders']);
                 $orders = $fsApi->get('orders/'.$orderIds)['orders'];
             }
-
+            
+            
             // Filter out to only allow for test orders
             $orders = array_filter($orders, function($order) {
                 return !$order['live'];
             });
+
+            // the previous filter has transformed the array into an associative one
+            // we need to reverse it to numerical by taking their values
+            $orders = array_values($orders);
             
             return new JsonResponse([
                 'success' => true,
