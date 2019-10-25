@@ -3,10 +3,13 @@
 This is an example implementation of a custom [Account Management Portal](https://docs.fastspring.com/customer-facing-account-management) using the [FastSpring API](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api).
 The backend is powered by the [Symfony](https://symfony.com) PHP framework.
 
+## Demo
+You can acess a live demo [here](https://fs-accountportal.appspot.com/login.html).
+
 ## Requirements
 
-PHP 7.1 or higher.
-[Composer](https://getcomposer.org/)
+- PHP 7.1 or higher.
+- [Composer](https://getcomposer.org/)
 
 ## Installation
 Install application with composer:
