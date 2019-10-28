@@ -38,6 +38,7 @@
     position: absolute;
     left: 50%;
     top: 50%;
+    z-index: 100;
 }
 
 .loading {
@@ -166,4 +167,14 @@
 
 .fulfillments .card {
     padding: 20px;
+}
+
+#order-table-header {
+    display: flex;
+    align-content: space-between;
+    justify-content: space-between;
+}
+
+#order-table-header li {
+    margin-top: 38px;
 }

@@ -35,16 +35,24 @@ function renderOrdersTable(orders) {
             </td>
         </tr>
     `);
+
     return (`
-        <div class='row'>
+        <div id="orders-table-container" class='row'>
             <div class='col'>
-                <ul class="nav nav-tabs">
-                <li class="nav-item nav-link active" style="
-    margin-top: 38px;
-    font-size: large;
-    font-weight: bold;
-">
+                <ul class="nav nav-tabs" id="order-table-header">
+                <li class="nav-item nav-link active" style="font-size: large;font-weight: bold;">
                     Your Orders
+                </li>
+                <li>
+                    <button
+                        class="btn btn-success"
+                        type="button"
+                        id="auth-button"
+                        data-toggle="modal"
+                        data-target="#chargeOrderModal"
+                    >
+                        <i class="fa fa-plus-square"></i> &nbsp; Create Order
+                    </button>
                 </li>
             </ul>
             <table class="table table-hover">
@@ -60,9 +68,9 @@ function renderOrdersTable(orders) {
                     ${orderRows.join('')}
                 </tbody>
             </table>
-            
             </div>
         </div>
+        
     `);
 }
 

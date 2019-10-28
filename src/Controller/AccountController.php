@@ -17,8 +17,6 @@ use App\Utils\AuthRequest;
  */
 class AccountController extends AbstractController
 {
-
-
     public function login(Request $request) {
         try {
             $username = $request->request->get('username');

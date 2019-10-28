@@ -65,5 +65,69 @@ function createProductAttributes(productPath) {
     };
     $('#attributesModal').modal('hide');
     updateOrders(payload);
+}
 
+/* The following function is used to create a new order and complete the charge inmediately through the API
+ * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders
+ *
+ * In order for this to work the customer must the customer must already have a payment method on file (i.e a subscription active)
+ */
+function chargeNewOrder() {
+    const chargeForm = document.getElementById('chargeOrderForm');
+    const productId = chargeForm.productId.value;
+    const price = chargeForm.price.value;
+    if (!(productId && price)) {
+        alert('Please fill in both fields');
+        return;
+    }
+    const accountId = getAccountId();
+    const payload = {
+        account: accountId,
+        items: [{
+            product: productId,
+            pricing: {
+                price: {
+                    USD: price
+                }
+            }
+        }]
+    };
+    // Add token to payload
+    const token = getToken();
+    payload.token = token;
+
+    
+    $('#charge-form-wrapper').addClass('loading');
+    $('#charge-form-wrapper .spinner-border').show();
+    
+    // Perform charge request
+    $.post(`${window.location.origin}/orders`, payload)
+        .done((resNewOrder) => {
+            if (resNewOrder && resNewOrder.success && resNewOrder.response.order) {
+                // Reload table content
+                // Give 2 seconds for changes to reflect in API
+                setTimeout(function() {
+                    $.post(`${window.location.origin}/getAccountDetails`, { token, accountId })
+                        .done((resAccount) => {
+                            if (resAccount && resAccount.success) {
+                                const accountElement = renderAccountDetails(resAccount.account);
+                                const ordersElement = resAccount.orders.length > 0 ?
+                                    renderOrdersTable(resAccount.orders)
+                                :
+                                    renderNoOrders(resAccount.orders);
+                                $('#account-container').html([accountElement, ordersElement]);
+                                
+                            }
+                            $('#charge-form-wrapper').removeClass('loading');
+                            $('#charge-form-wrapper .spinner-border').hide();
+                            $('#chargeOrderModal').modal('hide');
+                        });
+                }, 3000);
+            } else {
+                alert('Could not create order, please make sure product exists');
+                $('#charge-form-wrapper').removeClass('loading');
+                $('#charge-form-wrapper .spinner-border').hide();
+                $('#chargeOrderModal').modal('hide');
+            }
+        });
 }
