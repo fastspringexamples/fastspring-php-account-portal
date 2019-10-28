@@ -68,7 +68,7 @@ function createProductAttributes(productPath) {
 }
 
 /* The following function is used to create a new order and complete the charge inmediately through the API
- * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders
+ * https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders#id-/orders-CreateNewOrderandCompletetheCharge
  *
  * In order for this to work the customer must the customer must already have a payment method on file (i.e a subscription active)
  */
