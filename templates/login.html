@@ -6,6 +6,8 @@
 
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- Custom functions -->
+        <script type="text/javascript" src="/js/utils/common.js"> </script>
          <!-- Custom styles -->
         <link rel="stylesheet" href='/styles/custom.css'>
 
@@ -46,7 +48,9 @@
                 <h1 class="h3 mb-3 font-weight-normal"> Account Portal </h1>
                 <p> Please provide your API credentials </p>
             </div>
-
+            <div id="loading-spinner" class="spinner-border fs-spinner hide" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
             <div class="form-label-group">
                 <input type="text" id="inputUsername" class="form-control" placeholder="username" required autofocus>
                 <label for="inputEmail">Username</label>
@@ -64,6 +68,7 @@
             <p class="mt-5 mb-3 text-muted text-center">&copy; FastSpring</p>
         </form>
 
+        <!-- Help modal -->
         <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -101,6 +106,7 @@
                 const password = document.getElementById('inputPassword').value;
                 const email = document.getElementById('inputEmail').value;
                 const payload = { username, password , email };
+                showLoginLoader();
                 $.post(`${window.location.origin}/login`, payload)
                     .done((resLogin) => {
                         if (resLogin && resLogin.success) {
@@ -112,9 +118,11 @@
                         } else {
                             alert(resLogin.error);
                         }
+                        hideLoginLoader();
                     })
                     .fail(() => {
                         alert('There was a problem with your request, please try again');
+                        hideLoginLoader();
                     });
             }
 

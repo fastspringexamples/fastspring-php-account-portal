@@ -2,6 +2,15 @@
  *  Common util functions used by all the pages in the app
  */
 
+function showLoginLoader(subscriptionId) {
+    $('#loginForm').addClass('loading');
+    $('#loginForm .spinner-border').removeClass('hide');
+}
+
+function hideLoginLoader(subscriptionId) {
+    $('#loginForm').removeClass('loading');
+    $('#loginForm .spinner-border').addClass('hide');
+}
 
 function showItemLoader(subscriptionId) {
     $('.order-main-container').addClass('loading');
