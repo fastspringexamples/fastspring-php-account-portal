@@ -5,9 +5,11 @@ function renderSubscription(subscription) {
             <button class="btn btn-secondary" data-toggle="modal" data-target="#discountModal">
                 Cancel
             </button>`
-        : `<button class="btn btn-primary" onclick="uncancelSubscription('${subscription.id}')">
+        : (subscription.state === 'deactivated' ? ''
+            : `
+            <button class="btn btn-primary" onclick="uncancelSubscription('${subscription.id}')">
                 Uncancel
-          </button>`;
+            </button>`);
     return (`
         <div class='container' style="padding-bottom: 10px; position: relative">
             <div class="spinner-border fs-spinner hide" role="status">
@@ -52,7 +54,10 @@ function renderSubscription(subscription) {
                         Current Period: ${subscription.sequence}
                     </div>
                     <div class='row'>
-                        Next charge on ${subscription.nextChargeDateDisplay} for ${subscription.nextChargeTotalInPayoutCurrencyDisplay}
+                        ${
+                        (subscription.state === 'deactivated') ? '' :
+                        `Next charge on ${subscription.nextChargeDateDisplay} for ${subscription.nextChargeTotalInPayoutCurrencyDisplay}`
+                        }
                     </div> 
                 </div>
                 <div class='col-4'>

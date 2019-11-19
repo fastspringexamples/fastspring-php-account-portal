@@ -50,6 +50,7 @@ class SubscriptionController extends AbstractController
         try {
             $credentials = AuthRequest::getCredentials($request);
             $subscriptions = $request->request->all();
+            
             if(!(isset($subscriptions))){
                 return new JsonResponse([
                     'success' => false,
@@ -62,6 +63,7 @@ class SubscriptionController extends AbstractController
             }
             $fsApi = new FSApi($credentials);
             $response = $fsApi->post('subscriptions', $subscriptions);
+
             
             if ($response === null) {
                 new JsonResponse(['success' => false, 'error' => 'Request not valid']);
@@ -77,7 +79,7 @@ class SubscriptionController extends AbstractController
     public function deleteSubscription(Request $request) {
         try {
             $credentials = AuthRequest::getCredentials($request);
-            $subscriptionId = $request->attributes->get('subscriptionId');
+            $subscriptionId = $request->request->get('subscriptionId');
             if(!(isset($subscriptionId))){
                 return new JsonResponse([
                     'success' => false,

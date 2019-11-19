@@ -15,11 +15,6 @@ getAuthenticatedURL:
     controller: App\Controller\AccountController::getAuthenticatedURL
     methods: POST
 
-DRM:
-    path: /DRM
-    controller: App\Controller\AccountController::DRM
-    methods: [POST, GET]
-
 
     # Order endpoints
 
@@ -42,9 +37,9 @@ subscriptions:
     methods: POST
 
 deleteSubscriptions:
-    path: /subscriptions/{subscriptionId}
+    path: /subscriptions/delete
     controller: App\Controller\SubscriptionController::deleteSubscription
-    methods: DELETE
+    methods: POST
 
 getSubscriptions:
     path: /getCustomerSubscriptions

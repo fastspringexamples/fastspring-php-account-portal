@@ -21,7 +21,7 @@ function updateSubscription(payload, subscriptionId) {
                     });
                 }, 5000);
             } else {
-                alert('Could not cancel subscription: ', resNewSub.error);
+                alert(`Could not update subscription: ${JSON.stringify(resNewSub.error)}`);
                 hideItemLoader(subscriptionId);
             }
         });
@@ -77,21 +77,24 @@ function uncancelSubscription(subscriptionId) {
             deactivation: 'null'
         }]
     };
+    console.log(payload);
     updateSubscription(payload, subscriptionId);
 }
 
 
-function cancelSubscription(subscriptionId) {
+function cancelSubscription() {
+    // Close modal and show loader before doing the request
     showItemLoader();
+    $('#discountModal').modal('hide');
+    // Query API
+    const subscriptionId = getSubsId();
     const token = getToken();
-    payload.token = token;
-    $.ajax({
-        url: `${window.location.origin}/subscriptions/${subscriptionId}`,
-        type: 'DELETE',
-        success: function(resNewSub) {
+    const payload = { subscriptionId, token };
+    $.post(`${window.location.origin}/subscriptions/delete`, payload)
+        .done((resNewSub) => {
             if (resNewSub && resNewSub.success) {
                 setTimeout(function() {
-                    $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [ subscriptionId ] })
+                    $.post(`${window.location.origin}/getCustomerSubscriptions`, { token, subscriptionIds: [subscriptionId] })
                         .done((subData) => {
                             const newSubs = subData.subscriptions[0];
                             const newSubsElement = renderSubscription(newSubs);
@@ -100,9 +103,8 @@ function cancelSubscription(subscriptionId) {
                         });
                 }, 5000);
             } else {
-                alert('Could not cancel subscription: ', resNewSub);
+                alert(`Could not cancel subscription: ${JSON.stringify(resNewSub.error)}`);
                 hideItemLoader();
             }
-        }
-    });
+        });
 }
