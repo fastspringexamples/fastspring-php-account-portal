@@ -1,6 +1,8 @@
-function renderModalTags(order) {
-    let tags = 'No tags';
+function renderTags(order) {
+    let tags = '';
+    let actionButton = 'Add';
     if (order.tags && Object.keys(order.tags).length > 0) {
+        actionButton = 'Update';
         tags = Object.keys(order.tags).map((key) => (
             `<span> ${key} : ${order.tags[key]} </span>`
         )).join('');
@@ -19,10 +21,11 @@ function renderModalTags(order) {
                 data-toggle="modal"
                 data-target="#tagsModal"
             >
-                Update tags
+                ${actionButton} tags
             </button>
             </div>
         </div>
+        <!-- Render modal to add/update tags -->
         <div class="modal fade" id="tagsModal" tabindex="-1" role="dialog" aria-labelledby="tagsModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
@@ -51,39 +54,6 @@ function renderModalTags(order) {
                     </div>
                 </div>
             </div>
-    `);
-}
-
-function renderCustomTags(order) {
-    let tags = 'No tags';
-    if (order.tags && Object.keys(order.tags).length > 0) {
-        tags = Object.keys(order.tags).map((key) => (
-            `<span> ${key} : ${order.tags[key]} </span>`
-        )).join('');
-    }
-
-    return (`
-        <div class='row'>
-            <h5> Tags </h5>
-        </div>
-        <div class='row'>
-            <div class="col-5">
-                <form id='customTagsForm'>
-                    <div class="form-label-group">
-                        <input type="text" class="form-control" name="tagKey" id="tagKey">
-                        <label for="tagKey">Tag</label>
-                    </div>
-                    <div class="form-label-group">
-                        <input type="text" class="form-control" name="tagValue" id="tagValue">
-                        <label for="tagValue">Value</label>
-                    </div>
-                </form>
-                <button class="btn btn-outline-info btn-sm" style="margin-bottom: 3px;" onclick="createOrderTags('${order.id}')"> Add </button>
-            </div>
-            <div class="col-7">
-                ${tags}
-            </div>
-        </div>
     `);
 }
 
@@ -143,7 +113,9 @@ function renderProductFulfillments(item) {
 
 function renderProductAttributes(item) {
     let attributes = '';
+    let callToAction = 'Add'
     if (item.attributes && Object.keys(item.attributes).length > 0) {
+        callToAction = 'Update';
         const attributesItems = Object.keys(item.attributes).map((key) => (
             `<span> ${key} : ${item.attributes[key]} </span>`
         ));
@@ -167,10 +139,11 @@ function renderProductAttributes(item) {
                 data-toggle="modal"
                 data-target="#attributesModal"
             >
-                Update attributes
+                ${callToAction} attributes
             </button>
             </div>
         </div>
+        <!-- Render modal to add/update product attributes -->
         <div class="modal fade" id="attributesModal" tabindex="-1" role="dialog" aria-labelledby="attributesModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
@@ -194,7 +167,7 @@ function renderProductAttributes(item) {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"> Cancel </button>
-                            <button type="button" class="btn btn-primary" onclick='createProductAttributes('${productPath}')'> Update attributes</button>
+                            <button type="button" class="btn btn-primary" onclick="createProductAttributes('${productPath}');"> Update attributes</button>
                         </div>
                     </div>
                 </div>
@@ -237,7 +210,7 @@ function renderOrderItems(item) {
 
 function renderOrder(order) {
     // Render Order Custom tags
-    const customTags = renderModalTags(order);
+    const customTags = renderTags(order);
     // Render order items
     const orderItems = order.items.map(renderOrderItems);
 
@@ -299,7 +272,6 @@ function renderOrder(order) {
                                 <span style="border-top: 1px solid blue; padding: 1px 15px;"> ${order.subtotalDisplay} </span>
                             </div>
                         </div>
-                        ${returns}
                     </div>
                     <div class='col-3'>
                         <div class='row'>
@@ -321,7 +293,7 @@ function renderOrder(order) {
                 <br>
                 <div class='orderItems'>
                 <ul class="nav nav-tabs" style="border-bottom: 0;">
-                <li class="nav-item nav-link active" style="margin-top: 20px;font-size: large; font-weight: bold; border-bottom: 1px solid gainsboro">
+                <li style="margin-top: 20px;font-size: large; font-weight: bold;">
                     Order Items
                 </li>
             </ul>
