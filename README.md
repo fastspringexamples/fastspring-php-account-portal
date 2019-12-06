@@ -26,7 +26,11 @@ php bin/console server:start
 On every page, at the top right corner there is a Help button. Use to this button to understand how the current content that you see has been implemented. Here is the information for each page:
 
 #### Login Page
-To log into the portal you need to input your store's API credentials and a buyer's email. These credentials will be used along with the application to interact with the API on your behalf to retrieve and update buyer's account data such as orders and subscriptions. If the data provided is correct, a token will be generated which will be used along with the application to interact with the FastSpring API.
+There are two options to log into the portal:
+- You log in on your own store: to do that you need to input your store's API credentials and a buyer's email.
+- You log in on fastspringexamples store by providing only buyer's email (API credentials will be automatically applied).
+These credentials will be used along with the application to interact with the API on your behalf in order to retrieve and update buyer's account data such as orders and subscriptions.
+If the data provided is correct, a tokenized version of these credentials will be generated and used throughout the application.
 
 #### Account page
 In this page we are querying the [accounts](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts) endpoint to display the buyer's information.
