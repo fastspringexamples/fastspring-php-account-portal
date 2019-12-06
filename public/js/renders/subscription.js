@@ -10,6 +10,24 @@ function renderSubscription(subscription) {
             <button class="btn btn-primary" onclick="uncancelSubscription('${subscription.id}')">
                 Uncancel
             </button>`);
+
+    let updateOptions = '';
+    if (subscription.state === 'active') {
+        updateOptions = (`
+            <div class='row' style="padding: 15px;">
+                <div class='col-4'>
+                    <p> Base Product: &nbsp; <b> ${subscription.product} </b> </p>
+                    <input id="baseInput-${subscription.id}" type="text">
+                    <button class="btn btn-outline-info btn-sm" style="margin-bottom: 3px;" onclick="changeBaseProduct('${subscription.id}')"> Change </button>
+                </div>
+                <div class='col-4'>
+                    <p> Quantity: &nbsp; ${subscription.quantity} </p>
+                    <input type="number" min="1" id="quantityInput-${subscription.id}" type="text" style="max-width: 40px">
+                    <button class="btn btn-outline-info btn-sm"  style="margin-bottom: 3px;" onclick="changeSubsQuantity('${subscription.id}')"> Change </button>
+                </div>
+            </div>
+        `);
+    }
     return (`
         <div class='container' style="padding-bottom: 10px; position: relative">
             <div class="spinner-border fs-spinner hide" role="status">
@@ -56,7 +74,7 @@ function renderSubscription(subscription) {
                     <div class='row'>
                         ${
                         (subscription.state === 'deactivated') ? '' :
-                        `Next charge on ${subscription.nextChargeDateDisplay} for ${subscription.nextChargeTotalInPayoutCurrencyDisplay}`
+                        `Next charge of ${subscription.nextChargeTotalDisplay} on ${subscription.nextChargeDateDisplay}`
                         }
                     </div> 
                 </div>
@@ -69,20 +87,7 @@ function renderSubscription(subscription) {
                     </div>
                 </div>
             </div>
-            <br>
-            <br>
-            <div class='row' style="padding-left: 15px;">
-                <div class='col-4'>
-                    <p> Base Product: &nbsp; <b> ${subscription.product} </b> </p>
-                    <input id="baseInput-${subscription.id}" type="text">
-                    <button class="btn btn-outline-info btn-sm" style="margin-bottom: 3px;" onclick="changeBaseProduct('${subscription.id}')"> Change </button>
-                </div>
-                <div class='col-4'>
-                    <p> Quantity: &nbsp; ${subscription.quantity} </p>
-                    <input type="number" min="1" id="quantityInput-${subscription.id}" type="text" style="max-width: 40px">
-                    <button class="btn btn-outline-info btn-sm"  style="margin-bottom: 3px;" onclick="changeSubsQuantity('${subscription.id}')"> Change </button>
-                </div>
-            </div>
+            ${updateOptions}
         </div>
     `);
 }

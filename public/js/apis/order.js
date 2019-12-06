@@ -51,7 +51,6 @@ function createOrderTags() {
 function createProductAttributes(productPath) {
     const prodAttrForm = document.getElementById(`productAttrForm-${productPath}`);
     const attributes = {};
-    console.log(productPath, prodAttrForm, prodAttrForm[`attrKey-${productPath}`]);
     // TODO add validations
     attributes[prodAttrForm[`attrKey-${productPath}`].value] = prodAttrForm[`attrValue-${productPath}`].value;
     const payload = {
