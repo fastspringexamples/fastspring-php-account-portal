@@ -15,8 +15,8 @@ class Cryptor
 
     public function __construct()
     {
-        // For now let's use constants by default
-        $this->key = json_decode(file_get_contents(__DIR__.'/../../config/private_keys.json'), true)['secret'];
+        // For local development we'll use a dummy secret 'my-secret'
+        $this->key = getenv('KEY_SECRET') ||'my-secret';
         $this->method = 'aes-128-ctr';
     }
 

@@ -46,19 +46,22 @@
             <div class="text-center mb-4">
                 <img class="mb-4" src="/images/fastspring.png" alt="" width="72" height="72">
                 <h1 class="h3 mb-3 font-weight-normal"> Account Portal </h1>
-                <p> Please provide your API credentials </p>
+                <p> Please provide your API credentials to log in on your store </p>
+                <input type="checkbox" id='fsLogin'> Log in on fastspringexamples store instead
             </div>
             <div id="loading-spinner" class="spinner-border fs-spinner hide" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-            <div class="form-label-group">
-                <input type="text" id="inputUsername" class="form-control" placeholder="username" required autofocus>
-                <label for="inputEmail">Username</label>
-            </div>
+            <div id='credentials'>
+                <div class="form-label-group">
+                    <input type="text" id="inputUsername" class="form-control" placeholder="username" required autofocus>
+                    <label for="inputEmail">Username</label>
+                </div>
 
-            <div class="form-label-group">
-                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                <label for="inputPassword">Password</label>
+                <div class="form-label-group">
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <label for="inputPassword">Password</label>
+                </div>
             </div>
             <div class="form-label-group">
                 <input type="email" id="inputEmail" class="form-control" placeholder="Buyer's email" required>
@@ -102,8 +105,12 @@
                 API credentials is stored in the sessionStorage and the user is sent to buyer's account page.
             */
             function submitPassword() {
-                const username = document.getElementById('inputUsername').value;
-                const password = document.getElementById('inputPassword').value;
+                let username = 'fastspringexamples';
+                let password = 'fastspringexamples';
+                if (!$('#fsLogin').checked) {
+                    const username = document.getElementById('inputUsername').value;
+                    const password = document.getElementById('inputPassword').value;
+                }
                 const email = document.getElementById('inputEmail').value;
                 const payload = { username, password , email };
                 showLoginLoader();
@@ -137,7 +144,24 @@
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 }); 
+
+                // Login with fastspringexamples
+                $('#fsLogin').click(function(e) {
+                    if (this.checked) {
+                        $('#credentials').slideUp();
+                        $('#inputUsername').removeAttr('required');
+                        $('#inputPassword').removeAttr('required');
+                    } else {
+                        $('#credentials').slideDown();
+                        $('#inputUsername').attr('required');
+                        $('#inputPassword').attr('required');
+                    }
+                });
+
             });
+
+
+
             
         </script>
         <script
