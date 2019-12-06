@@ -22,12 +22,6 @@ You can use PHP’s built-in [web server](https://symfony.com/doc/current/setup/
 php bin/console server:start
 ```
 
-## Deployment
-Use the following command to deploy this app in a [Google Cloud Platform App Engine](https://cloud.google.com/appengine/) flexible instance:
-```
-gcloud app deploy
-```
-
 ## Usage
 On every page, at the top right corner there is a Help button. Use to this button to understand how the current content that you see has been implemented. Here is the information for each page:
 
