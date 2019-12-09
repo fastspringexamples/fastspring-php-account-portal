@@ -33,8 +33,8 @@ class AccountController extends AbstractController
             // Heads-up: These credentials won't be accessible for local development!
             if ($username === 'fastspringexamples' &&
                 $password === 'fastspringexamples') {
-                $username = getenv('FS_USERNAME');
-                $password = getenv('FS_PASSWORD');
+                $username = getenv('FS_USERNAME') || 'fake';
+                $password = getenv('FS_PASSWORD') || 'fake';
             }
 
             // Try to retrieve data from API
@@ -47,7 +47,7 @@ class AccountController extends AbstractController
             $accounts = $fsApi->get('accounts?email='.$email);
 
             // Check that this buyer's email exists
-            if (isset($accounts['error'])) {
+            if (!isset($accounts) || isset($accounts['error'])) {
                 return new JsonResponse([
                     'success' => false,
                     'error' => $accounts['error']['email']
