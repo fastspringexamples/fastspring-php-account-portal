@@ -3,6 +3,8 @@
 This is an example implementation of a custom [Account Management Portal](https://docs.fastspring.com/customer-facing-account-management) using the [FastSpring API](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api).
 The backend is powered by the [Symfony](https://symfony.com) PHP framework.
 
+Please note that this example aims to serve as a reference and not as a production ready application.
+
 ## Demo
 You can acess a live demo [here](https://fs-accountportal.appspot.com/login.html).
 
@@ -33,19 +35,19 @@ These credentials will be used along with the application to interact with the A
 If the data provided is correct, a tokenized version of these credentials will be generated and used throughout the application.
 
 #### Account page
-In this page we are querying the [accounts](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts) endpoint to display the buyer's information.
-In order for buyers to update their payment method, they need to visit the [Account Management Portal](https://docs.fastspring.com/customer-facing-account-management). You can obtain a temporary [authenticated link](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts#id-/accounts-GetauthenticatedaccountmanagementURL) to the buyer's account in the portal through the API.
-Among the account data returned by the API there is an array of orderIds which we will use to query the [orders](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders) endpoint to show a one-liner description of each of them.
-The 'Create Order' green button allows you to [charge a new order](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders#id-/orders-CreateNewOrderandCompletetheCharge) to the current account. In order for this to work, there needs to be an active subscription so that FastSpring can charge the payment method on file.
+In this page we are querying the [accounts](https://community.fastspring.com/s/article/accounts) endpoint to display the buyer's information.
+In order for buyers to update their payment method, they need to visit the [Account Management Portal](https://community.fastspring.com/s/article/Customer-Facing-Account-Management). You can obtain a temporary [authenticated link](https://community.fastspring.com/s/article/Customer-Facing-Account-Management#Customer-FacingAccountManagement-ProvidingCustomerswithPre-AuthenticatedAccountManagementLinks) to the buyer's account in the portal through the API.
+Among the account data returned by the API there is an array of orderIds which we will use to query the [orders](https://community.fastspring.com/s/article/orders) endpoint to show a one-liner description of each of them.
+The 'Create Order' green button allows you to [charge a new order](https://community.fastspring.com/s/article/orders#UpdateOrderTagsandAttributes) to the current account. In order for this to work, there needs to be an active subscription so that FastSpring can charge the payment method on file.
 
 #### Order page
-This page shows information about a particular order retrieved through the [orders](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/orders) endpoint. At the left hand side there is payment information and a link to its corresponding invoice.
-Next to it, there is a form to update its [custom tags](https://docs.fastspring.com/integrating-with-fastspring/passing-and-capturing-custom-order-tags-and-product-attributes). At the bottom, the order items are displayed. The order items contain basic information about the product, its [fulfillments](https://docs.fastspring.com/products-bundles-and-subscriptions/fulfillments) and a form to update
-its [attributes](https://docs.fastspring.com/integrating-with-fastspring/passing-and-capturing-custom-order-tags-and-product-attributes).
+This page shows information about a particular order retrieved through the [orders](https://community.fastspring.com/s/article/orders) endpoint. At the left hand side there is payment information and a link to its corresponding invoice.
+Next to it, there is a form to update its [custom tags](https://community.fastspring.com/s/article/Passing-and-capturing-custom-order-tags-and-product-attributes). At the bottom, the order items are displayed. The order items contain basic information about the product, its [fulfillments](https://community.fastspring.com/s/article/Fulfillments) and a form to update
+its [attributes](https://community.fastspring.com/s/article/Passing-and-capturing-custom-order-tags-and-product-attributes).
 If the order refers to a subscription a link to its subscription page is shown.
 
 #### Subscription page
-This page shows information about a particular subscription retrieved through the [subscriptions](https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions) endpoint.
+This page shows information about a particular subscription retrieved through the [subscriptions](https://community.fastspring.com/s/article/subscriptions) endpoint.
 At the right hand side there is a button to cancel/uncancel the subscription.
 If the subscription is active, two forms at the bottom will appaear to upgrade/downgrade the subscription by changing the base product and quantity.
 
