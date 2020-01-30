@@ -59,7 +59,7 @@ function applySubsDiscount() {
                 pricing: {
                     discount: {
                         type: 'percent',
-                        percentage: 5,
+                        percentage: 20,
                         duration: 2
                     }
                 }
