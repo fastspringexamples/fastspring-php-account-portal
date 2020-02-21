@@ -5,9 +5,6 @@ The backend is powered by the [Symfony](https://symfony.com) PHP framework.
 
 Please note that this example aims to serve as a reference and not as a production ready application.
 
-## Demo
-You can acess a live demo [here](https://fs-accountportal.appspot.com/login.html).
-
 ## Requirements
 
 - PHP 7.1 or higher.
