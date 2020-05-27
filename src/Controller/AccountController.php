@@ -28,13 +28,14 @@ class AccountController extends AbstractController
                     'error' => 'Missing params in request'
                 ]);
             }
+            
             // If user has chosen login with fastspringexamples store
             // we set these variables to its API credentials
             // Heads-up: These credentials won't be accessible for local development!
             if ($username === 'fastspringexamples' &&
                 $password === 'fastspringexamples') {
-                $username = getenv('FS_USERNAME') || 'fake';
-                $password = getenv('FS_PASSWORD') || 'fake';
+                $username = getenv('FS_USERNAME') ?? 'fake';
+                $password = getenv('FS_PASSWORD') ?? 'fake';
             }
 
             // Try to retrieve data from API
