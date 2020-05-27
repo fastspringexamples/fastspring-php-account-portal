@@ -5,6 +5,9 @@ The backend is powered by the [Symfony](https://symfony.com) PHP framework.
 
 Please note that this example aims to serve as a reference and not as a production ready application.
 
+## Live Demo
+You can access a live demo [here](https://fs-account-portal.herokuapp.com/login.html).
+
 ## Requirements
 
 - PHP 7.1 or higher.
