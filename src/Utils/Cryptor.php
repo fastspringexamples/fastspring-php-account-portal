@@ -16,7 +16,7 @@ class Cryptor
     public function __construct()
     {
         // For local development we'll use a dummy secret 'my-secret'
-        $this->key = getenv('KEY_SECRET') ||'my-secret';
+        $this->key = getenv('KEY_SECRET') ?? 'my-secret';
         $this->method = 'aes-128-ctr';
     }
 
