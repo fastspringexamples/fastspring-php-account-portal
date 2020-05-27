@@ -1,0 +1,8 @@
+{
+    "doctrine/sql-formatter": {
+        "version": "1.0.1"
+    },
+    "php": {
+        "version": "7.1"
+    }
+}
