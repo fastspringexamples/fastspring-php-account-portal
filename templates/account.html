@@ -17,18 +17,8 @@
     </head>
 
     <body>
-        <a target="_blank" href="https://github.com/fastspringexamples/fastspring-php-account-portal">
-            <img src="/images/forkme_logo.svg" id='forkme' alt="Fork me on GitHub">
-        </a>
         <nav class="navbar navbar-dark bg-dark">
-            <span
-                 data-toggle="modal"
-                data-target="#infoModal"
-                class="info"
-            >
-                <i class="fa fa-question-circle">
-                </i>
-                Page info
+            <img style="width: 200px;" src="https://new.steinberg.net/static/logo/steinberg-logo.svg" alt="" >
             </span>
             <button id="fs-logout" data-toggle="tooltip" data-placement="bottom" title="Logout" data-original-title="Logout" class="navbar-toggler" type="button" onclick="logout()">
                 <i class="fa fa-sign-out customBlue" style="cursor:pointer">
@@ -74,41 +64,6 @@
                     </div>
                 </div>
         </div>
-        <div class="modal fade" id="chargeOrderModal" tabindex="-1" role="dialog" aria-labelledby="chargeOrderModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"> Create New Order and Charge </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div id="charge-form-wrapper">
-                            <div class="spinner-border fs-spinner hide" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            <div class="modal-body">
-                                <form id="chargeOrderForm">
-                                    <div class="form-row">
-                                        <div class="col-md-8 mb-8">
-                                            <label for="charge-productId"> Product Id </label>
-                                            <input type="text" required class="form-control" name="productId" id="charge-productId">
-                                        </div>
-                                        <div class="col-md-4 mb-4">
-                                            <label for="price"> Unit Price </label>
-                                            <input value="1" type="number" min="0" class="form-control" name="price" id="charge-price">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> Cancel </button>
-                                <button type="button" class="btn btn-primary" onclick='chargeNewOrder()'> Charge </button>
-                            </div>
-                        <div>
-                    </div>
-                </div>
-            </div>
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {

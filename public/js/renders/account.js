@@ -16,7 +16,7 @@ function renderAccountDetails(account) {
                 <p> Access FastSpring-hosted management portal if you would like to update your
                 payment information </p>
                 <div id='authenticated-container'>
-                    <button class="btn btn-primary" type="button" id='auth-button' onclick='getAuthenticatedURL(this);'>
+                    <button class="btn" style="background-color: #c90526; color: white;" type="button" id='auth-button' onclick='getAuthenticatedURL(this);'>
                         Get Access
                     </button>
                 </div>
@@ -43,21 +43,10 @@ function renderOrdersTable(orders) {
                 <li class="nav-item nav-link active" style="font-size: large;font-weight: bold;">
                     Your Orders
                 </li>
-                <li>
-                    <button
-                        class="btn btn-success"
-                        type="button"
-                        id="auth-button"
-                        data-toggle="modal"
-                        data-target="#chargeOrderModal"
-                    >
-                        <i class="fa fa-plus-square"></i> &nbsp; Create Order
-                    </button>
-                </li>
             </ul>
             <table class="table table-hover">
                 <thead>
-                    <tr class="bg-info">
+                    <tr style="background-color: #c90526; color: white;">
                         <th scope="col"> Date </th>
                         <th scope="col"> Reference </th>
                         <th scope="col"> Subtotal </th>

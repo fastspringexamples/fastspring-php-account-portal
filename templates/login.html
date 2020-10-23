@@ -31,43 +31,24 @@
         <link href="/styles/floating-labels.css" rel="stylesheet">
     </head>
     <body>
-        <a target="_blank" href="https://github.com/fastspringexamples/fastspring-php-account-portal">
-            <img src="/images/forkme_logo.svg" id='forkme' alt="Fork me on GitHub">
-        </a>
-        <span
-            data-toggle="modal"
-            data-target="#infoModal"
-            class="login-info"
-        >
-            <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Page Information" data-original-title="Page Information">
-            </i>
-        </span>
+        
         <form class="form-signin" id="loginForm">
             <div class="text-center mb-4">
-                <img class="mb-4" src="/images/fastspring-logo.png" alt="" >
-                <p> Please provide your API credentials to log in on your portal </p>
-                <input type="checkbox" id='fsLogin'> Log in on fastspringexamples portal instead
+                <img class="mb-4" src="https://new.steinberg.net/static/logo/steinberg-logo.svg" alt="" >
+                <p> Please provide your Steinberg Auth credentials to access your portal </p>
             </div>
             <div id="loading-spinner" class="spinner-border fs-spinner hide" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-            <div id='credentials'>
-                <div class="form-label-group">
-                    <input type="text" id="inputUsername" class="form-control" placeholder="username" required autofocus>
-                    <label for="inputEmail">Username</label>
-                </div>
-
-                <div class="form-label-group">
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <label for="inputPassword">Password</label>
-                </div>
-            </div>
             <div class="form-label-group">
                 <input type="email" id="inputEmail" class="form-control" placeholder="Buyer's email" required>
-                <label for="inputEmail">Buyer's email</label>
+                <label for="inputEmail">Email</label>
+            </div>
+            <div class="form-label-group">
+                <input type="password" id="inputEmail" class="form-control" placeholder="Buyer's password" required>
+                <label for="password">Password</label>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            <p class="mt-5 mb-3 text-muted text-center">&copy; FastSpring</p>
         </form>
 
         <!-- Help modal -->
@@ -104,12 +85,8 @@
                 API credentials is stored in the sessionStorage and the user is sent to buyer's account page.
             */
             function submitPassword() {
-                let username = 'fastspringexamples';
-                let password = 'fastspringexamples';
-                if (!$('#fsLogin').prop('checked')) {
-                    username = document.getElementById('inputUsername').value;
-                    password = document.getElementById('inputPassword').value;
-                }
+                let username = '181K9DV1SH6I5-AYBCW0NQ';//'fastspringexamples';
+                let password = 'V89lSMgEQr2L0DYVxE1ROQ';//'fastspringexamples';
                 const email = document.getElementById('inputEmail').value;
                 const payload = { username, password , email };
                 showLoginLoader();
