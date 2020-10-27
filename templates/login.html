@@ -95,7 +95,7 @@
                         if (resLogin && resLogin.success) {
                             const { accountId, token } = resLogin;
                             // Store private token in local storage
-                            sessionStorage.setItem('FS-token', JSON.stringify(token));
+                            localStorage.setItem('FS-token', JSON.stringify(token));
                             // Redirect user to account page
                             window.location.href = `/account/${accountId}/overview.html`;
                         } else {

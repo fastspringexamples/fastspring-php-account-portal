@@ -70,6 +70,12 @@
                 $('#loading-spinner').show();
                 // Populate content
                 const url = new URL(window.location.href); 
+                    if (url.searchParams.get("token")) {
+                        const token = url.searchParams.get("token");
+                        localStorage.setItem('FS-token', JSON.stringify(token));
+                        window.history.replaceState(null, null, window.location.pathname);
+                    }
+
                 const accountId = url.pathname.split("/")[2];
                 // Get account details and render it
                 const token = getToken();

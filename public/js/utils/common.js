@@ -75,7 +75,7 @@ function forceLogout(errMessage) {
  *  If token is not available we will redirect users back to login page.
  */
 function getToken() {
-    const token = JSON.parse(sessionStorage.getItem('FS-token'));
+    const token = JSON.parse(localStorage.getItem('FS-token'));
     if (!token) {
         forceLogout('Token not found, please login again!');
     } else {

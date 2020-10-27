@@ -23,10 +23,17 @@ class AccountController extends AbstractController
             $password = $request->request->get('password');
             $email = $request->request->get('email');
             if(!(isset($username) && isset($password) && isset($email))){
-                return new JsonResponse([
-                    'success' => false,
-                    'error' => 'Missing params in request'
-                ]);
+                $data = json_decode($request->getContent(), true);
+                $username = $data['username'];
+                $password = $data['password'];
+                $email = $data['email'];
+
+                if(!(isset($username) && isset($password) && isset($email))){
+                    return new JsonResponse([
+                        'success' => false,
+                        'error' => 'Missing params in request'
+                    ]);
+                }
             }
             
             // If user has chosen login with fastspringexamples store
