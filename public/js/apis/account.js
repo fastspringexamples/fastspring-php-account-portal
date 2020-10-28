@@ -9,9 +9,7 @@ function getAuthenticatedURL() {
         .done((resAuth) => {
             if (resAuth && resAuth.success) {
                 const authURL = resAuth.url;
-                $('#authenticated-container ').html(`
-                    <a target="_blank" href='${authURL}'> Link to Portal </a>
-                `);
+                window.open(authURL);
             } else {
                 alert(resAuth.error);
             }
