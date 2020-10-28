@@ -1,7 +1,9 @@
 function renderTags(order) {
-    let tags = '';
+    let tags = "This order didn't contain custom information";
     let actionButton = 'Add';
+    let classC = '';
     if (order.tags && Object.keys(order.tags).length > 0) {
+        classC = 'card';
         actionButton = 'Update';
         tags = Object.keys(order.tags).map((key) => (
             `<span> ${key} : ${order.tags[key]} </span>`
@@ -12,17 +14,11 @@ function renderTags(order) {
         <div class='row'>
             <div style="text-align: center" class="col">
             <h5 > Custom Tags </h5>
-            <div class='card' style="width: 50%; margin: auto">
+            <div class='${classC}' style="width: 50%; margin: auto; padding: 4px">
                 ${tags}
             </div>
             <br>
-            <button
-                class="btn btn-outline-info btn-sm"
-                data-toggle="modal"
-                data-target="#tagsModal"
-            >
-                ${actionButton} tags
-            </button>
+
             </div>
         </div>
         <!-- Render modal to add/update tags -->
@@ -60,7 +56,10 @@ function renderTags(order) {
 function renderProductFulfillments(item) {
     let fulfillmentsItems = [];
     if (item.fulfillments && Object.keys(item.fulfillments).length > 0) {
+        console.log(Object.keys(item.fulfillments));
+        console.log(Object.keys(item.fulfillments).length);
         fulfillmentsItems = Object.keys(item.fulfillments).map((key) => {
+            if (key === 'instructions') return '';
             const fulfilment = item.fulfillments[key][0];
             return (`
                     <div>
@@ -70,7 +69,7 @@ function renderProductFulfillments(item) {
                                 `
                             <div class='license '>
                                 <ul>
-                                    <li> <span> License "${fulfilment.display}": <span> </li>
+                                    <li> <span> ${fulfilment.display}: <span> </li>
                                     <ul>
                                         <li> ${fulfilment.license} </li>
                                     </ul>
@@ -201,7 +200,7 @@ function renderOrderItems(item) {
                 ${fulfillments || ''}
             </div>
             <div class='col-4'>
-                ${attributes || ''}
+               
             </div>
             </div>
         </div>
@@ -230,7 +229,7 @@ function renderOrder(order) {
                 <div class="spinner-border fs-spinner hide" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class='row' style="border-bottom: 1px solid; text-align: center; padding: 5px; background-color: #17a2b8!important; font-weight: bold;">
+                <div class='row' style="border-bottom: 1px solid; text-align: center; padding: 5px; background-color: #c90526;font-weight: bold;; color: white;">
                     <div class='col'>
                          <span> Reference Id: ${order.reference} <span>
                     </div>
@@ -285,7 +284,7 @@ function renderOrder(order) {
                         </div>
                     </div>
                     <div class='col-5'>
-                        ${customTags || ''}
+                        ${customTags}
                     </div>
                 </div>
                 <div>
